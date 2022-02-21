@@ -1,0 +1,32 @@
+<!-- <div class="form-group">
+    <label class="control-label" for="dept_id">Department</label>
+    <select name="dept_id" class="form-control">
+     
+{% for dept in d %}      
+                     {% if dept.id==did %}
+                  <option value="{{ dept.id }}" selected>{{ dept.name }}</option>
+                     {% else %}
+                  <option value="{{ dept.id }}">{{ dept.name }}</option>  
+                     {% endif %}
+                     {% endfor %} -->
+
+
+
+                     name=models.CharField(max_length=50)
+    dob=models.DateField()
+    gender=models.CharField(max_length=15)
+    address=models.CharField(max_length=200)
+    email=models.CharField(max_length=30)
+    dept_id=models.BigIntegerField()
+    qualifiication=models.CharField(max_length=30)
+    login_id=models.BigIntegerField()
+
+
+
+
+
+
+
+    <div class="alert alert-dismissible alert-danger">
+                <button class="close" type="button" data-dismiss="alert">×</button><strong>Oh snap!</strong><a class="alert-link" href="#">Change a few things up</a> and try submitting again.
+              </div>

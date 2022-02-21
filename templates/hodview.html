@@ -1,0 +1,61 @@
+{% extends 'dashbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i>  Head of Department </h1>
+        <p>List of HODs</p>
+      </div>
+       
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">HOD</li>
+        <li class="breadcrumb-item active"><a href="#">View HODs</a></li>
+      </ul>
+    </div>
+    <div class="clearfix"></div>
+    
+
+      
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Head of Department </h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Department</th>
+                  <th>HOD</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in dept %}
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ d.name }}</td>
+                    {% for t in teachers %}
+                    {% for l in loginfo %}
+                    {% if l.id == t.login_id and t.dept_id == d.id %}
+                    <td>  {{ t.name }} </td>
+                    {% endif %}
+                    {% endfor %} 
+                    {% endfor %} 
+
+
+                 
+             
+                </tr>
+               
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+   
+        
+       
+      </div>
+    </div>
+  </main>
+  {% endblock %}

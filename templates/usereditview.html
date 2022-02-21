@@ -1,0 +1,65 @@
+{% extends 'dashbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> User credentials </h1>
+        <p>List of users</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">User login</li>
+        <li class="breadcrumb-item active"><a href="/usereditview/">Edit credentials</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Users</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Username</th>
+                  <!-- <th>Password</th> -->
+                  <th>Usertype</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for c in login %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ c.username }}</td>
+                  <!-- <td>{{ c.password }}</td> -->
+                  {% for d in utype %}
+                  {% if c.utype_id == d.id %}
+                  <td>{{ d.name }}</td> 
+                  {% endif %}
+                  {% endfor %} 
+                  {% if c.status == '1' %}
+                  <td>Active</td>
+                  {% else %}
+                  <td>Inactive</td>
+                  {% endif %}
+                  <form method="POST" action="/useredit/">
+                    {% csrf_token %}
+                  <input type="text" hidden value="{{ c.id }}" name="id">
+                  <td><input class="btn btn-warning" type="submit" value="Edit"></td>
+                </form>
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

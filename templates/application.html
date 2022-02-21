@@ -1,0 +1,458 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <!-- Twitter meta-->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@pratikborsadiya">
+    <meta property="twitter:creator" content="@pratikborsadiya">
+    <!-- Open Graph Meta-->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Vali Admin">
+    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
+    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
+    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
+    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
+    <title>Student Application</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="app sidebar-mini" style="background-image: url('{% static 'images/formbg.jpg' %}'); background-attachment:fixed;">
+      <center>
+  
+        <div>
+          <h1 style="color:white;"><i class="fa fa-paper-plane-o"></i> Apply for a course</h1>
+       
+        <div class="col-md-6">
+          <div class="tile" >
+            <h3 class="tile-title">Register your details</h3>
+            <div class="tile-body">
+              <form class="form-horizontal" method="POST" action='/apply/' enctype="multipart/form-data" name="myform" onsubmit="return validate()">
+                {% csrf_token %}
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Name</label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="text" placeholder="Enter full name" name="name"  onkeydown="return alphaOnly(event);">
+                    <span id="a" class="badge badge-danger"></span>
+                  </div>
+                </div>
+                
+
+                
+                
+                <div class="form-group row">
+                    <label class="control-label col-md-3">Date of Birth</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="date"  name="dob" >
+                      <span id="b" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Gender</label>
+                    <!-- <div class="col-md-9"> -->
+                      <div class="form-check">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="Male" required>Male
+                        </label>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="Female">Female
+                        </label>
+                      </div>
+                    <!-- </div> -->
+                  </div>
+                
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Address</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" rows="4" placeholder="Enter your address" name="address" required></textarea>
+                  </div>
+                </div>
+               
+                    
+
+                <div class="form-group row">
+                    <label class="control-label col-md-3">Phone no</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="number" placeholder="Enter phone number" name="phone" >
+                      <span id="c" class="badge badge-danger"></span>
+                    </div>
+                  </div>  
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">E-mail</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="email" placeholder="Enter e-mail id" name="email" >
+                      <span id="d" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  
+                <div class="form-group row">
+                    <label class="control-label col-md-3">Photograph</label>
+                    <div class="col-md-8">
+                      <input class="form-control btn btn-outline-success" type="file" name="photo" required>
+                    </div>
+                  </div>
+                 
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Father's name</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter father's name" name="fname" onkeydown="return alphaOnly(event);" >
+                      <span id="e" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Father's occupation</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter father's occupation" name="fjob" >
+                      <span id="f" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Father's mobile no</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter father's phone" name="fphone" >
+                      <span id="g" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Father's email id</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter father's email id" name="fmail" >
+                      <span id="h" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Mother's name</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter mother's name" name="mname" onkeydown="return alphaOnly(event);">
+                      <span id="i" class="badge badge-danger"></span>
+                    </div>
+                  </div>     
+                  
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Mother's occupation</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter mother's occupation" name="mjob" >
+                      <span id="j" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+ 
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Mother's mobile no</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter mother's phone" name="mphone" >
+                      <span id="k" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Mother's email id</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter mother's phone" name="mmail" >
+                      <span id="l" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3" for="course">Course Applied</label>
+                    <div class="col-md-8">
+                    <select name="course" class="form-control" required>
+                     {% for c in course %}      
+                  <option value="{{ c.id }}">{{ c.name }}</option>
+                     {% endfor %}
+                </select>
+            </div>  
+          </div> 
+
+
+                <div class="form-group row">
+                    <label class="control-label col-md-3">Percentage in X<sup>th</sup></label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter percentage score(upto 2 decimal places)" name="tenth" pattern="^(100(\.0{0,2}?)?$|([1-9]|[1-9][0-9])(\.\d{1,2})?)$">
+                      <span id="m" class="badge badge-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">X<sup>th</sup> certificate</label>
+                    <div class="col-md-8">
+                      <input class="form-control btn btn-outline-success" type="file" name="certificatetenth" required >
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Percentage in XII<sup>th</sup></label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter percentage score(upto 2 decimal places)" name="twelfth" pattern="^(100(\.0{0,2}?)?$|([1-9]|[1-9][0-9])(\.\d{1,2})?)$">
+                      <span id="n" class="badge badge-danger"></span>
+                    </div>
+                  </div> 
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">XII<sup>th</sup> certificate</label>
+                    <div class="col-md-8">
+                      <input class="form-control btn btn-outline-success" type="file" name="certificatetwelfth" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Percentage in UG</label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" placeholder="Enter percentage score(upto 2 decimal places)" name="ug" pattern="^(100(\.0{0,2}?)?$|([1-9]|[1-9][0-9])(\.\d{1,2})?)$">
+                      <span id="o" class="badge badge-danger"></span>
+                    </div>
+                  </div> 
+
+                  <div class="form-group row">
+                    <label class="control-label col-md-3">Degree certificate</label>
+                    <div class="col-md-8">
+                      <input class="form-control btn btn-outline-success" type="file" name="certificateug" required>
+                    </div>
+                  </div>
+            
+            </div>
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                    <input class="btn btn-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+    </main>
+    <!-- Essential javascripts for application to work-->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="{% static 'js/plugins/pace.min.js' %}"></script>
+    <!-- Page specific javascripts-->
+    <!-- Google analytics script-->
+    <script type="text/javascript">
+      if(document.location.hostname == 'pratikborsadiya.in') {
+      	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      	ga('create', 'UA-72504830-1', 'auto');
+      	ga('send', 'pageview');
+      }
+    </script>
+    <script>
+        function validate()  
+            {  
+                 if (document.myform.name.value.trim()=="")
+                  {
+                    document.getElementById("a").style.display="inline";
+                    document.getElementById("a").innerHTML="Please fill this field";
+                   document.myform.name.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("a").style.display="none";
+                  }
+
+                 if (document.myform.dob.value =="" )
+                  {
+                    document.getElementById("b").style.display="inline";
+                    document.getElementById("b").innerHTML="Please put your  date of birth as MM/DD/YYYY";
+                   document.myform.dob.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("b").style.display="none";
+                  }
+
+                  if (document.myform.fname.value.trim()=="")
+                  {
+                    document.getElementById("e").style.display="inline";
+                    document.getElementById("e").innerHTML="Please fill this field";
+                   document.myform.fname.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("e").style.display="none";
+                  }
+
+                  
+                  if (document.myform.fjob.value.trim()=="")
+                  {
+                    document.getElementById("f").style.display="inline";
+                    document.getElementById("f").innerHTML="Please fill this field";
+                   document.myform.fjob.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("f").style.display="none";
+                  }
+
+                  
+                  if (document.myform.mname.value.trim()=="")
+                  {
+                    document.getElementById("i").style.display="inline";
+                    document.getElementById("i").innerHTML="Please fill this field";
+                   document.myform.mname.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("i").style.display="none";
+                  }
+
+                  
+                  if (document.myform.mjob.value.trim()=="")
+                  {
+                    document.getElementById("j").style.display="inline";
+                    document.getElementById("j").innerHTML="Please fill this field";
+                   document.myform.mjob.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("j").style.display="none";
+                  }
+
+                  if (document.myform.phone.value.trim()=="")
+                  {
+                    document.getElementById("c").style.display="inline";
+                    document.getElementById("c").innerHTML="Please fill this field";
+                    document.myform.phone.focus();
+                    return false;
+                  } 
+                  else{
+                    document.getElementById("c").style.display="none";
+                  }
+                   if (document.myform.phone.value.length < 10 || document.myform.phone.value.length > 10 )
+                  {
+                    document.getElementById("c").style.display="inline";
+                    document.getElementById("c").innerHTML="Please enter a valid 10 digit mobile number";
+                    document.myform.phone.focus();
+                    return false;
+                  }  
+                  else{
+                    document.getElementById("c").style.display="none";
+                  }
+
+
+
+                  if (document.myform.fphone.value.trim()=="")
+                  {
+                    document.getElementById("g").style.display="inline";
+                    document.getElementById("g").innerHTML="Please fill this field";
+                    document.myform.fphone.focus();
+                    return false;
+                  } 
+                  else{
+                    document.getElementById("g").style.display="none";
+                  }
+                   if (document.myform.fphone.value.length < 10 || document.myform.fphone.value.length > 10 )
+                  {
+                    document.getElementById("g").style.display="inline";
+                    document.getElementById("g").innerHTML="Please enter a valid 10 digit mobile number";
+                    document.myform.fphone.focus();
+                    return false;
+                  }  
+                  else{
+                    document.getElementById("g").style.display="none";
+                  }
+
+
+                  
+                  if (document.myform.mphone.value.trim()=="")
+                  {
+                    document.getElementById("k").style.display="inline";
+                    document.getElementById("k").innerHTML="Please fill this field";
+                    document.myform.mphone.focus();
+                    return false;
+                  } 
+                  else{
+                    document.getElementById("k").style.display="none";
+                  }
+                   if (document.myform.mphone.value.length < 10 || document.myform.mphone.value.length > 10 )
+                  {
+                    document.getElementById("k").style.display="inline";
+                    document.getElementById("k").innerHTML="Please enter a valid 10 digit mobile number";
+                    document.myform.mphone.focus();
+                    return false;
+                  }  
+                  else{
+                    document.getElementById("k").style.display="none";
+                  }
+
+
+                  var x=document.myform.email.value;   
+                  var atposition=x.indexOf("@");  
+                  var dotposition=x.lastIndexOf(".");  
+                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
+                    {  
+                        document.getElementById("d").style.display="inline";
+                        document.getElementById("d").innerHTML="Please enter a valid email id"; 
+                        document.myform.email.focus();
+                      return false;  
+                      
+                    } 
+                    else{
+                        document.getElementById("d").style.display="none";
+                      }
+    
+                      var y=document.myform.fmail.value;   
+                      var atposition=x.indexOf("@");  
+                      var dotposition=x.lastIndexOf(".");  
+                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
+                    {  
+                        document.getElementById("h").style.display="inline";
+                        document.getElementById("h").innerHTML="Please enter a valid email id"; 
+                        document.myform.fmail.focus();
+                      return false;  
+                      
+                    } 
+                    else{
+                        document.getElementById("h").style.display="none";
+                      }
+                 
+
+                      var z=document.myform.mmail.value;   
+                      var atposition=x.indexOf("@");  
+                      var dotposition=x.lastIndexOf(".");  
+                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
+                    {  
+                        document.getElementById("l").style.display="inline";
+                        document.getElementById("l").innerHTML="Please enter a valid email id"; 
+                        document.myform.mmail.focus();
+                      return false;  
+                      
+                    } 
+                    else{
+                        document.getElementById("l").style.display="none";
+                      }
+                
+            }
+
+            function alphaOnly(event) {
+              var key = event.keyCode;
+              return ((key >= 65 && key <= 90) || key == 8 || key == 32);
+            };
+      </script>
+  
+</center>
+  </body>
+</html>

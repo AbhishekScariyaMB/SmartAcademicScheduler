@@ -1,0 +1,91 @@
+{% extends 'dashbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage courses</h1>
+          <p>Edit course</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Course</li>
+          <li class="breadcrumb-item"><a href="/courseeditview/">Edit course</a></li>
+        </ul>
+      </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="alert alert-dismissible alert-success"> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Edit Course</h3>
+            <div class="tile-body">
+              <form method="POST" action="/courseupdate/">
+                {% csrf_token %}
+                <input type="text" name="id" value="{{ c.id }}" hidden>
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <input class="form-control" type="text" pattern="[a-zA-Z\s]+"  name="name" id="name" value="{{ c.name }}" required maxlength="40">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Duration</label>
+                    <input class="form-control" type="text" pattern="[0-9]{1}" value="{{ c.duration }}" name="duration" id="duration" required maxlength="5">
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="dept_id">Department</label>
+                    <select name="dept" class="form-control" id="dept">
+                     
+                     {% for dept in d %}      
+                     {% if dept.id == c.dept_id %}
+                     <option value="{{ dept.id }}" selected>{{ dept.name }}</option>
+                     {% else %}
+                     <option value="{{ dept.id }}">{{ dept.name }}</option>  
+                     {% endif %}
+                     {% endfor %}
+                     </select>
+                     <div class="form-group">
+                        <label class="control-label" for="status">Status</label>
+                        <select name="status" name="status" class="form-control">
+                      {% if c.status == '1' %}
+                      <option value="1" selected>Active</option>
+                      <option value="0">Inactive</option>
+                      {% else %}
+                      <option value="1">Active</option>
+                      <option value="0" selected>Inactive</option>
+                      {% endif %}
+                    </select>
+                </div>
+                </select>
+            </div>  
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                 <input class="btn btn-primary" type="submit" value="Update">
+                </div>
+                </div>
+             </div>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+     
+    
+      </div>
+    </main>
+    
+  {% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'dashbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i>  Head of Department </h1>
+        <p>List of teachers</p>
+      </div>
+       
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Courses</li>
+        <li class="breadcrumb-item active"><a href="#">Set HOD</a></li>
+      </ul>
+    </div>
+    <div class="clearfix"></div>
+    
+
+      
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Departments </h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Department</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in department %}
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ d.name }}</td>
+                  <td><form method="POST" action="/deptteacherview/">
+                    {% csrf_token %}
+                  <input type="text" hidden value="{{ d.id }}" name="id">
+                 
+                  <input class="btn btn-info" type="submit" value="View teachers">
+                </form></td>
+             
+                </tr>
+               
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+   
+        
+       
+      </div>
+    </div>
+  </main>
+  {% endblock %}

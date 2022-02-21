@@ -1,0 +1,128 @@
+{% extends 'dashbase.html' %}
+{% load static%}
+{% block content %}
+ 
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage users</h1>
+          <p>Edit user</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item">User login</li>
+            <li class="breadcrumb-item active"><a href="/usereditview/">Edit credentials</a></li>
+          </ul>
+        </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="alert alert-dismissible alert-success"> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Edit user login</h3>
+            <div class="tile-body">
+              <form method="POST" action="/userupdate/" onsubmit="return validate()" name="f">
+                {% csrf_token %}
+                <input type="text" name="id" value="{{ user.id }}" hidden>
+                <div class="form-group">
+                  <label class="control-label">Username</label>
+                  <input class="form-control" type="text" name="username" id="username" value="{{ user.username }}" required maxlength="40">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Password</label>
+                    <input class="form-control" type="password" value="{{ user.password }}" name="password" id="password" required>
+                    
+                   <span id="a" class="badge badge-danger"></span>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label">Re-enter password</label>
+                    <input class="form-control" type="password" value="{{ user.password }}" name="passcheck" id="passcheck" required>
+                    <span id="b" class="badge badge-danger"></span>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="utype">Usertype</label>
+                    <select name="utype" class="form-control" id="utype">
+                     
+                     {% for t in utype %}      
+                     {% if t.id == user.utype_id %}
+                     <option value="{{ t.id }}" selected>{{ t.name }}</option>
+                     {% else %}
+                     <option value="{{ t.id }}">{{ t.name }}</option>  
+                     {% endif %}
+                     {% endfor %}
+                     </select>
+                     <div class="form-group">
+                        <label class="control-label" for="status">Status</label>
+                        <select name="status" name="status" class="form-control">
+                      {% if user.status == '1' %}
+                      <option value="1" selected>Active</option>
+                      <option value="0">Inactive</option>
+                      {% else %}
+                      <option value="1">Active</option>
+                      <option value="0" selected>Inactive</option>
+                      {% endif %}
+                    </select>
+                </div>
+                </select>
+            </div>  
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                 <input class="btn btn-primary" type="submit" value="Update" >
+                </div>
+                </div>
+             </div>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+     
+    
+      </div>
+    </main>
+    <script type="text/javascript">
+      function validate()
+      {
+          var a=f.password.value;
+          var b=f.passcheck.value;
+          if(a.length<8)
+          { 
+            document.getElementById("a").style.display="inline";
+              document.getElementById("a").innerHTML="Enter a minimum of 8 characters";
+           
+              return false;
+          }
+          else{
+            document.getElementById("a").style.display="none";
+          }
+          if(a!=b)
+          {
+            document.getElementById("b").style.display="inline";
+              document.getElementById("b").innerHTML="Passwords doesn't match!";
+              return false;
+          }
+          else
+          {
+            document.getElementById("a").style.display="none";
+          }
+          
+      }
+    </script>
+  {% endblock %}
+
+  
