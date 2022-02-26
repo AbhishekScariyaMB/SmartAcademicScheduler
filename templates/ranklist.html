@@ -1,0 +1,85 @@
+{% extends 'admissionbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Rank List of applicants</h1>
+        <p>For {{ course }}</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Applications</li>
+        <li class="breadcrumb-item active"><a href="/ranklistview/">Rank lists</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Rank list</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Photo</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Action</th>
+                  
+                  <form method="POST" action="/sendinvite/">
+                    {% csrf_token %}
+                </tr>
+                <tr>
+                {% if not applicants %}
+                  <td colspan="7" align="center">
+                    <br>
+                  <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
+                  </td>
+                  
+                  {% else %}  
+                {% for a in applicants %}
+               
+                
+                 
+                  <td>{{ forloop.counter }}</td>
+                  <td><img class="img-thumbnail" src="{{a.photo}}" height="170" width="120"></td>
+                  <td>{{ a.name }}</td>
+                  <td>{{ a.gender }}</td>
+                  <td>{{ a.email }}</td>
+                  <td>{{ a.phone }}</td>
+                 <td> 
+                    
+                     <input type="checkbox" name="invite[]" value="{{ a.id }}"></td>
+                     <input type="text" hidden value="{{ a.course_id }}" name="cid"> 
+            
+                </tr>
+                {% endfor %}
+                <tr>
+                <td></td>   <td></td>  <td></td>   <td></td>   
+                <br><br>
+                <td colspan="2">  
+                    
+                        <label>Interview date</label>
+                       
+                          <input class="form-control" type="date"  name="date" required >
+                         
+                       
+                      </td> 
+                        
+                   
+                        <td>  <input class="btn btn-outline-info" type="submit" value="Send Invites">
+                  </form>
+                  {% endif %}     
+                </td>    
+                </tr>
+              </thead>
+              <tbody>
+              
+              
+            
+  </main>
+  {% endblock %}

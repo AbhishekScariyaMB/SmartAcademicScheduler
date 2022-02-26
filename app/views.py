@@ -471,3 +471,89 @@ def confirmedapp(request):
         "course":c.name,
     }
     return render(request,'appliview.html',data)
+
+def ranklistview(request):
+    c=course.objects.all()
+    d=department.objects.all()
+    data={
+        "course":c,
+        "dept":d,
+    }
+    return render(request,'ranklistview.html',data)    
+
+def ranklist(request):
+    cid=request.POST.get("cid")
+    a=application.objects.filter(stage = '1.5',course_id=cid) 
+    c=course.objects.get(id=cid) 
+    r=record.objects.all()
+    for i in a:
+        for j in r:
+            if i.id == j.app_id:
+                if j.ug is not None:
+                    i.score=(j.tenth + j.twelfth + j.ug)/3
+                    i.save()
+                else:    
+                    i.score=((0.3*j.tenth+0.7*j.twelfth)/3)
+                    i.save()
+    b=application.objects.filter(stage = '1.5',course_id=cid).order_by('-score')     
+    print(b)           
+    data={
+        "applicants":b,
+        "course":c.name,
+    }     
+    return render(request,'ranklist.html',data)  
+
+def sendinvite(request):
+    applicants= request.POST.getlist('invite[]')
+    if applicants==[]:
+        return redirect('/ranklistview/') 
+    cid=request.POST.get("cid")
+    c=course.objects.get(id=cid)
+    date=request.POST.get("date")  
+    for i in applicants:
+        a=application.objects.get(id=int(i))
+        subject = 'Interview invitation'
+        message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.name}\n\n\n The admission process has been scheduled on { date }. You are requested to reach the college by 9:00 am with the required documents.'
+        email_from = cms.settings.EMAIL_HOST_USER
+        recipient_list = [a.email]
+        send_mail( subject, message, email_from, recipient_list )
+        a.stage='2'
+        a.save()
+    return redirect('/ranklistview/')    
+
+def courseapp2(request):
+    c=course.objects.all()
+    d=department.objects.all()
+    data={
+        "course":c,
+        "dept":d,
+    }
+    return render(request,'courseapp2.html',data)
+
+def appliview2(request):
+    cid=request.POST.get("cid")
+    cname=request.POST.get("cname")
+    a=application.objects.filter(course_id=cid,stage='2')
+    r=record.objects.all()
+    data={
+        "app":a,
+        "rec":r,
+        "course":cname,
+    }
+    return render(request,'appliview2.html',data)
+
+def verify(request):
+    cid=request.POST.get("cid")
+    aid=request.POST.get("aid")
+    app=application.objects.get(id=aid)
+    app.stage="3"
+    app.save()
+    cname=request.POST.get("cname")
+    a=application.objects.filter(course_id=cid,stage='2')
+    r=record.objects.all()
+    data={
+        "app":a,
+        "rec":r,
+        "course":cname,
+    }
+    return render(request,'appliview2.html',data)

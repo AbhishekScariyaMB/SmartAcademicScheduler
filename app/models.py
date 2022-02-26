@@ -56,6 +56,7 @@ class application(models.Model):
     photo=models.CharField(max_length=100)
     course_id=models.BigIntegerField(default=0)
     stage=models.CharField(max_length=15,default='1')
+    score=models.DecimalField(max_digits=4, decimal_places=2,default=0)
     class Meta:
         db_table = "application"        
 

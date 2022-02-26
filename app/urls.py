@@ -43,6 +43,12 @@ urlpatterns = [
      path('appliview/',views.appliview),
      path('confirmapp/',views.confirmapp),
      path('confirmedapp/',views.confirmedapp),
+     path('ranklistview/',views.ranklistview),
+     path('ranklist/',views.ranklist),
+     path('sendinvite/',views.sendinvite),
+     path('courseapp2/',views.courseapp2),
+     path('appliview2/',views.appliview2),
+     path('verify/',views.verify),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

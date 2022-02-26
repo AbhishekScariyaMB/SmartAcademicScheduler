@@ -4,20 +4,20 @@
 <main class="app-content">
     <div class="app-title">
       <div>
-        <h1><i class="fa fa-th-list"></i> Applications Received </h1>
+        <h1><i class="fa fa-th-list"></i> Applicants Invited </h1>
         <p>For {{ course }}</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Applications</li>
-        <li class="breadcrumb-item active"><a href="/courseapp/">Stage-1</a></li>
+        <li class="breadcrumb-item active"><a href="/courseapp2/">Stage-2</a></li>
       </ul>
     </div>
     
       <div class="clearfix"></div>
       <div class="col-md-12">
         <div class="tile">
-          <h3 class="tile-title">Received applications</h3>
+          <h3 class="tile-title">Invited applicants</h3>
           <div class="table-responsive">
             <table class="table">
               <thead>
@@ -43,7 +43,7 @@
                 {% for a in app %}
                 {% for r in rec %}  
                
-                  {% if a.id == r.app_id and a.stage == '1'  %}
+                  {% if a.id == r.app_id and a.stage == '2' %}
                   <td>{{ forloop.parentloop.counter }}</td>
                   <td><img class="img-thumbnail" src="{{a.photo}}" height="170" width="120"></td>
                   <td>{{ a.name }}</td>
@@ -57,14 +57,14 @@
                 <td>{{ r.ug }}<br><a class="text-primary " href={{ r.certificateug }} target="_blank">Certificate</a></td>
                 <td>
                   
-                  <form method="POST" action="/confirmapp/">
+                  <form method="POST" action="/verify/">
                     {% csrf_token %}
                     
                     <input type="text" hidden value="{{ a.id }}" name="aid">  
-                    <input type="text" hidden value="{{ c.id }}" name="cid">  
-                      <input type="text" hidden value="{{ c.name }}" name="cname">
+                    <input type="text" hidden value="{{ a.course_id }}" name="cid">  
+                      <input type="text" hidden value="{{ course }}" name="cname">
                
-                <input class="btn btn-outline-info" type="submit" value="Send Enquiry">
+                <input class="btn btn-outline-info" type="submit" value="Verify">
               </form>
                 </td>
                 {% endif %}                
@@ -85,7 +85,7 @@
 
 
 
-    <div class="clearfix"></div>
+    <!-- <div class="clearfix"></div>
       <div class="col-md-12">
         <div class="tile">
           <h3 class="tile-title">Confirm applications</h3>
@@ -106,7 +106,7 @@
 
                 </tr>
                 <tr>
-                {% if not app %}
+                {% if not a %}
                 <td colspan="10" align="center">
                   <br>
                 <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
@@ -118,7 +118,7 @@
                 
                   {% if a.id == r.app_id and a.stage == '1.25'  %}
                   
-                    <td>{{ forloop.parentloop.counter }}</td>
+                    <td>{{ forloop.counter }}</td>
                   
                   <td><img class="img-thumbnail" src="{{a.photo}}" height="170" width="120"></td>
                   <td>{{ a.name }}</td>
@@ -156,6 +156,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </main>
   {% endblock %}

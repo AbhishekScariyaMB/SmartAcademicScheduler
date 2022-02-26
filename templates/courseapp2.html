@@ -4,13 +4,13 @@
 <main class="app-content">
     <div class="app-title">
       <div>
-        <h1><i class="fa fa-th-list"></i>Rank Lists</h1>
+        <h1><i class="fa fa-th-list"></i> Applicants invited </h1>
         <p>List of courses</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Applications</li>
-        <li class="breadcrumb-item active"><a href="/ranklistview/">Rank lists</a></li>
+        <li class="breadcrumb-item active"><a href="/courseapp2/">Stage-2</a></li>
       </ul>
     </div>
     
@@ -50,13 +50,13 @@
                   {% endif %}
                   <td>
                   
-                    <form method="POST" action="/ranklist/">
+                    <form method="POST" action="/appliview2/">
                       {% csrf_token %}
                       
                       <input type="text" hidden value="{{ c.id }}" name="cid">  
                       <input type="text" hidden value="{{ c.name }}" name="cname">
                  
-                  <input class="btn btn-outline-info" type="submit" value="View list">
+                  <input class="btn btn-outline-info" type="submit" value="View applications">
                 </form></td>
                 </tr>
                 {% endfor %} 
