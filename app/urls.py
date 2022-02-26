@@ -39,6 +39,10 @@ urlpatterns = [
      path('hodview/',views.hodview), 
      path('appli/',views.appli),
      path('apply/',views.apply),
+     path('courseapp/',views.courseapp),
+     path('appliview/',views.appliview),
+     path('confirmapp/',views.confirmapp),
+     path('confirmedapp/',views.confirmedapp),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

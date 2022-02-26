@@ -415,3 +415,59 @@ def apply(request):
     data2.save()
     
     return render(request,'home.html')
+
+def courseapp(request):
+    c=course.objects.all()
+    d=department.objects.all()
+    data={
+        "course":c,
+        "dept":d,
+    }
+    return render(request,'courseapp.html',data)
+
+def appliview(request):
+    cid=request.POST.get("cid")
+    cname=request.POST.get("cname")
+    a=application.objects.filter(course_id=cid,stage__lt=2)
+    r=record.objects.all()
+    data={
+        "app":a,
+        "rec":r,
+        "course":cname,
+    }
+    return render(request,'appliview.html',data)
+
+def confirmapp(request):
+    id=request.POST.get("aid")  
+    a=application.objects.get(id=id)
+    c=course.objects.get(id=a.course_id)
+    subject = 'Application confirmation'
+    message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.name}\n\n\n Please contact us to confirm your application. You can do so by replying to this email or contacting us at +919228833746.'
+    email_from = cms.settings.EMAIL_HOST_USER
+    recipient_list = [a.email]
+    send_mail( subject, message, email_from, recipient_list )
+    a.stage='1.25'
+    a.save()
+    snd1=application.objects.filter(course_id=c.id,stage__lt=2)
+    snd2=record.objects.all()
+    data={
+        "app":snd1,
+        "rec":snd2,
+        "course":c.name,
+    }
+    return render(request,'appliview.html',data)
+
+def confirmedapp(request):
+    id=request.POST.get("aid")  
+    a=application.objects.get(id=id)
+    c=course.objects.get(id=a.course_id)
+    a.stage='1.5'
+    a.save()
+    snd1=application.objects.filter(course_id=c.id,stage__lt=2)
+    snd2=record.objects.all()
+    data={
+        "app":snd1,
+        "rec":snd2,
+        "course":c.name,
+    }
+    return render(request,'appliview.html',data)

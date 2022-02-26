@@ -145,7 +145,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'smartacademicscheduler@gmail.com'
-EMAIL_HOST_PASSWORD = 'mymcaproject123@'
+EMAIL_HOST_PASSWORD = 'kamisato22#'
 
 MESSAGE_TAGS = {
     messages.SUCCESS: 'alert alert-dismissible alert-success',
@@ -155,3 +155,9 @@ MESSAGE_TAGS = {
 #-----------------IMAGE------------------------
 MEDIA_URL = '/media/' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda r: False,  # disables it
+    # '...
+}

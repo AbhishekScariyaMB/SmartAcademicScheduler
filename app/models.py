@@ -55,6 +55,7 @@ class application(models.Model):
     email=models.CharField(max_length=30)
     photo=models.CharField(max_length=100)
     course_id=models.BigIntegerField(default=0)
+    stage=models.CharField(max_length=15,default='1')
     class Meta:
         db_table = "application"        
 

@@ -74,7 +74,8 @@
                 <div class="form-group row">
                   <label class="control-label col-md-3">Address</label>
                   <div class="col-md-8">
-                    <textarea class="form-control" rows="4" placeholder="Enter your address" name="address" required></textarea>
+                    <textarea class="form-control" rows="4" placeholder="Enter your address" name="address"></textarea>
+                    <span id="ad" class="badge badge-danger"></span>
                   </div>
                 </div>
                
@@ -100,7 +101,8 @@
                 <div class="form-group row">
                     <label class="control-label col-md-3">Photograph</label>
                     <div class="col-md-8">
-                      <input class="form-control btn btn-outline-success" type="file" name="photo" required>
+                      <input class="form-control btn btn-outline-success" type="file" name="photo">
+                      <span id="ph" class="badge badge-danger"></span>
                     </div>
                   </div>
                  
@@ -174,11 +176,13 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3" for="course">Course Applied</label>
                     <div class="col-md-8">
-                    <select name="course" class="form-control" required>
+                    <select name="course" class="form-control" name="select">
+                      <option value="select">select</option>
                      {% for c in course %}      
                   <option value="{{ c.id }}">{{ c.name }}</option>
                      {% endfor %}
                 </select>
+                <span id="sel" class="badge badge-danger"></span>
             </div>  
           </div> 
 
@@ -194,7 +198,8 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3">X<sup>th</sup> certificate</label>
                     <div class="col-md-8">
-                      <input class="form-control btn btn-outline-success" type="file" name="certificatetenth" required >
+                      <input class="form-control btn btn-outline-success" type="file" name="certificatetenth">
+                      <span id="mc" class="badge badge-danger"></span>
                     </div>
                   </div>
 
@@ -209,7 +214,8 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3">XII<sup>th</sup> certificate</label>
                     <div class="col-md-8">
-                      <input class="form-control btn btn-outline-success" type="file" name="certificatetwelfth" required>
+                      <input class="form-control btn btn-outline-success" type="file" name="certificatetwelfth">
+                      <span id="nc" class="badge badge-danger"></span>
                     </div>
                   </div>
 
@@ -224,7 +230,8 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3">Degree certificate</label>
                     <div class="col-md-8">
-                      <input class="form-control btn btn-outline-success" type="file" name="certificateug" required>
+                      <input class="form-control btn btn-outline-success" type="file" name="certificateug">
+                      <span id="oc" class="badge badge-danger"></span>
                     </div>
                   </div>
             
@@ -284,6 +291,62 @@
                     document.getElementById("b").style.display="none";
                   }
 
+                if (document.myform.address.value.trim() =="" )
+                  {
+                    document.getElementById("ad").style.display="inline";
+                    document.getElementById("ad").innerHTML="Please put your  address";
+                   document.myform.address.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("ad").style.display="none";
+                  }
+                  if (document.myform.phone.value.trim()=="")
+                  {
+                    document.getElementById("c").style.display="inline";
+                    document.getElementById("c").innerHTML="Please fill this field";
+                    document.myform.phone.focus();
+                    return false;
+                  } 
+                  else{
+                    document.getElementById("c").style.display="none";
+                  }
+                   if (document.myform.phone.value.length < 10 || document.myform.phone.value.length > 10 )
+                  {
+                    document.getElementById("c").style.display="inline";
+                    document.getElementById("c").innerHTML="Please enter a valid 10 digit mobile number";
+                    document.myform.phone.focus();
+                    return false;
+                  }  
+                  else{
+                    document.getElementById("c").style.display="none";
+                  }
+                  var x=document.myform.email.value;   
+                  var atposition=x.indexOf("@");  
+                  var dotposition=x.lastIndexOf(".");  
+                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
+                    {  
+                        document.getElementById("d").style.display="inline";
+                        document.getElementById("d").innerHTML="Please enter a valid email id"; 
+                        document.myform.email.focus();
+                      return false;  
+                      
+                    } 
+                    else{
+                        document.getElementById("d").style.display="none";
+                      }
+    
+                 if (document.myform.photo.value.trim()=="")
+                  {
+                    document.getElementById("ph").style.display="inline";
+                    document.getElementById("ph").innerHTML="Please fill this field";
+                   document.myform.photo.focus();
+                   return false;
+                  }
+                  else{
+                    document.getElementById("ph").style.display="none";
+                  }
+
                   if (document.myform.fname.value.trim()=="")
                   {
                     document.getElementById("e").style.display="inline";
@@ -306,7 +369,42 @@
                   else{
                     document.getElementById("f").style.display="none";
                   }
-
+                  if (document.myform.fphone.value.trim()=="")
+                  {
+                    document.getElementById("g").style.display="inline";
+                    document.getElementById("g").innerHTML="Please fill this field";
+                    document.myform.fphone.focus();
+                    return false;
+                  } 
+                  else{
+                    document.getElementById("g").style.display="none";
+                  }
+                   if (document.myform.fphone.value.length < 10 || document.myform.fphone.value.length > 10 )
+                  {
+                    document.getElementById("g").style.display="inline";
+                    document.getElementById("g").innerHTML="Please enter a valid 10 digit mobile number";
+                    document.myform.fphone.focus();
+                    return false;
+                  }  
+                  else{
+                    document.getElementById("g").style.display="none";
+                  }
+                  
+                  var y=document.myform.fmail.value;   
+                  var atposition=x.indexOf("@");  
+                  var dotposition=x.lastIndexOf(".");  
+              if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
+                {  
+                    document.getElementById("h").style.display="inline";
+                    document.getElementById("h").innerHTML="Please enter a valid email id"; 
+                    document.myform.fmail.focus();
+                  return false;  
+                  
+                } 
+                else{
+                    document.getElementById("h").style.display="none";
+                  }
+             
                   
                   if (document.myform.mname.value.trim()=="")
                   {
@@ -331,52 +429,6 @@
                     document.getElementById("j").style.display="none";
                   }
 
-                  if (document.myform.phone.value.trim()=="")
-                  {
-                    document.getElementById("c").style.display="inline";
-                    document.getElementById("c").innerHTML="Please fill this field";
-                    document.myform.phone.focus();
-                    return false;
-                  } 
-                  else{
-                    document.getElementById("c").style.display="none";
-                  }
-                   if (document.myform.phone.value.length < 10 || document.myform.phone.value.length > 10 )
-                  {
-                    document.getElementById("c").style.display="inline";
-                    document.getElementById("c").innerHTML="Please enter a valid 10 digit mobile number";
-                    document.myform.phone.focus();
-                    return false;
-                  }  
-                  else{
-                    document.getElementById("c").style.display="none";
-                  }
-
-
-
-                  if (document.myform.fphone.value.trim()=="")
-                  {
-                    document.getElementById("g").style.display="inline";
-                    document.getElementById("g").innerHTML="Please fill this field";
-                    document.myform.fphone.focus();
-                    return false;
-                  } 
-                  else{
-                    document.getElementById("g").style.display="none";
-                  }
-                   if (document.myform.fphone.value.length < 10 || document.myform.fphone.value.length > 10 )
-                  {
-                    document.getElementById("g").style.display="inline";
-                    document.getElementById("g").innerHTML="Please enter a valid 10 digit mobile number";
-                    document.myform.fphone.focus();
-                    return false;
-                  }  
-                  else{
-                    document.getElementById("g").style.display="none";
-                  }
-
-
-                  
                   if (document.myform.mphone.value.trim()=="")
                   {
                     document.getElementById("k").style.display="inline";
@@ -397,39 +449,6 @@
                   else{
                     document.getElementById("k").style.display="none";
                   }
-
-
-                  var x=document.myform.email.value;   
-                  var atposition=x.indexOf("@");  
-                  var dotposition=x.lastIndexOf(".");  
-                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
-                    {  
-                        document.getElementById("d").style.display="inline";
-                        document.getElementById("d").innerHTML="Please enter a valid email id"; 
-                        document.myform.email.focus();
-                      return false;  
-                      
-                    } 
-                    else{
-                        document.getElementById("d").style.display="none";
-                      }
-    
-                      var y=document.myform.fmail.value;   
-                      var atposition=x.indexOf("@");  
-                      var dotposition=x.lastIndexOf(".");  
-                  if (atposition<1 || dotposition<atposition+2 || dotposition+2>=x.length)
-                    {  
-                        document.getElementById("h").style.display="inline";
-                        document.getElementById("h").innerHTML="Please enter a valid email id"; 
-                        document.myform.fmail.focus();
-                      return false;  
-                      
-                    } 
-                    else{
-                        document.getElementById("h").style.display="none";
-                      }
-                 
-
                       var z=document.myform.mmail.value;   
                       var atposition=x.indexOf("@");  
                       var dotposition=x.lastIndexOf(".");  
@@ -444,7 +463,76 @@
                     else{
                         document.getElementById("l").style.display="none";
                       }
-                
+                      if (document.myform.select.value=="select")
+                      {
+                        document.getElementById("sel").style.display="inline";
+                        document.getElementById("sel").innerHTML="Please fill this field";
+                       document.myform.select.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("sel").style.display="none";
+                      }
+                      if (document.myform.tenth.value.trim()=="")
+                      {
+                        document.getElementById("m").style.display="inline";
+                        document.getElementById("m").innerHTML="Please fill this field";
+                       document.myform.tenth.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("m").style.display="none";
+                      }
+                      if (document.myform.certificatetenth.value.trim()=="")
+                      {
+                        document.getElementById("mc").style.display="inline";
+                        document.getElementById("mc").innerHTML="Please fill this field";
+                       document.myform.certificatetenth.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("mc").style.display="none";
+                      }
+                      if (document.myform.twelfth.value.trim()=="")
+                      {
+                        document.getElementById("n").style.display="inline";
+                        document.getElementById("n").innerHTML="Please fill this field";
+                       document.myform.twelfth.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("n").style.display="none";
+                      }
+                      if (document.myform.certificatetwelfth.value.trim()=="")
+                      {
+                        document.getElementById("nc").style.display="inline";
+                        document.getElementById("nc").innerHTML="Please fill this field";
+                       document.myform.certificatetwelfth.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("nc").style.display="none";
+                      }
+                      if (document.myform.ug.value.trim()=="")
+                      {
+                        document.getElementById("o").style.display="inline";
+                        document.getElementById("o").innerHTML="Please fill this field";
+                       document.myform.ug.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("o").style.display="none";
+                      }
+                      if (document.myform.certificateug.value.trim()=="")
+                      {
+                        document.getElementById("oc").style.display="inline";
+                        document.getElementById("oc").innerHTML="Please fill this field";
+                       document.myform.certificateug.focus();
+                       return false;
+                      }
+                      else{
+                        document.getElementById("oc").style.display="none";
+                      }
             }
 
             function alphaOnly(event) {

@@ -1,12 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admission in charge</title>
+{% extends 'admissionbase.html' %}
+{% load static%}
+{% block content %}
+<main class="app-content">
+      
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+.mySlides {display:none;}
+</style>
 </head>
+
 <body>
-<h1>Welcome Admission in charge! USERNAME = {{username}}</h1>    
-</body>
-</html>
+
+<h2 class="w3-center">Welcome&nbsp;{{username}}</h2>
+
+<div class="w3-content w3-section" style="max-width:650px">
+  <img class="mySlides" src="{% static 'assets/images/slider-01.jpg' %}" style="width:100%">
+  <img class="mySlides" src="{% static 'assets/images/slider-02.jpg' %}" style="width:100%">
+  <img class="mySlides" src="{% static 'assets/images/slider-03.jpg' %}" style="width:100%">
+</div>
+
+<script>
+var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  myIndex++;
+  if (myIndex > x.length) {myIndex = 1}    
+  x[myIndex-1].style.display = "block";  
+  setTimeout(carousel, 2000); // Change image every 2 seconds
+}
+</script>
+    </main>
+
+{% endblock %}    
