@@ -1,0 +1,71 @@
+{% extends 'hodbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Batches </h1>
+        <p>List of batches</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Courses</li>
+        <li class="breadcrumb-item active"><a href="/batchview/">View batches</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Batches</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Batch name</th>
+                  <th>Course</th>
+                  <th>Semester</th>
+                  <th>Class teacher</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for b in batch %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ b.name }}</td>
+                  {% for c in course %}
+                  {% if c.id == b.course_id %}
+                  <td>{{ c.name }}</td>
+                  {% endif %}
+                  {% endfor %} 
+                  <td>{{ b.semester }}</td>
+                  {% for t in teacher %}
+                  {% if b.teacher_id == t.id %}
+                  <td>{{ t.name }}</td>
+                  <td>
+                    <form method="POST" action="#">
+                        {% csrf_token %}
+                        
+                        <input type="text" hidden value="{{ c.id }}" name="cid">  
+                        <input type="text" hidden value="{{ c.name }}" name="cname">
+                   
+                    <input class="btn btn-outline-info" type="submit" value="Sem transfer">
+                  </form>
+                  </td>
+                  {% endif %}
+                  {% endfor %} 
+                 
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

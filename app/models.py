@@ -84,3 +84,16 @@ class record(models.Model):
     class Meta:
         db_table = "record"   
 
+class student(models.Model):
+    app_id=models.BigIntegerField(default=0)
+    batch_id=models.BigIntegerField(default=0)
+    class Meta:
+        db_table = "student"   
+
+class batch(models.Model):
+    name=models.CharField(max_length=40)
+    course_id=models.BigIntegerField(default=0)
+    teacher_id=models.BigIntegerField(default=0)
+    semester=models.BigIntegerField(default=0)
+    class Meta:
+        db_table = "batch"

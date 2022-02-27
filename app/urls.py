@@ -49,6 +49,16 @@ urlpatterns = [
      path('courseapp2/',views.courseapp2),
      path('appliview2/',views.appliview2),
      path('verify/',views.verify),
+     path('newadmissions/',views.newadmissions),
+     path('dash/',views.dash),
+     path('dash2/',views.dash2),
+     path('dash3/',views.dash3),
+     path('dash4/',views.dash4),
+     path('newadmissionview/',views.newadmissionview),
+     path('batchadd/',views.batchadd),
+     path('batchaddval/',views.batchaddval),
+     path('batchview/',views.batchview),
+     path('addstudent/',views.addstudent),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
+  
+  
     <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
     <!-- Twitter meta-->
     <meta property="twitter:card" content="summary_large_image">
@@ -24,7 +25,7 @@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-   
+    
   </head>
   <body class="app sidebar-mini">
     <!-- Navbar-->
@@ -92,41 +93,36 @@
     <aside class="app-sidebar">
       <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" height="45" width="45" src="{% static 'images/admin.png' %}" alt="User Image">
         <div>
-          <p class="app-sidebar__user-name">ADMIN</p>
+          <p class="app-sidebar__user-name">HOD</p>
         
         </div>
       </div>
       <ul class="app-menu">
-        <li><a class="app-menu__item" href="/dashboardref/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Departments</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Home</span></a></li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Admissions</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/deptadd/"><i class="fa fa-plus-square"></i>&nbsp;Add Department</a></li>
-            <li><a class="treeview-item" href="/deptview/" rel="noopener"><i class="fa fa-search"></i>&nbsp;View Departments</a></li>
-            <li><a class="treeview-item" href="/depteditview/"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit Departments</a></li>
+            <li><a class="treeview-item" href="/newadmissions/"><i class="fa fa-circle-o"></i>&nbsp;New Admissions</a></li>
+            <li><a class="treeview-item" href="#" rel="noopener"><i class="fa fa-check-circle-o"></i>&nbsp;New Batches</a></li>
+            <!-- <li><a class="treeview-item" href="#"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit function</a></li> -->
             <!-- <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i>Disable Departments</a></li> -->
           </ul>
         </li>
-        <!-- <li><a class="app-menu__item" href="charts.html"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Charts</span></a></li> -->
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-graduation-cap"></i><span class="app-menu__label">&nbsp;Courses</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <!-- <li><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-pie-chart"></i><span class="app-menu__label">Charts</span></a></li> -->
+       <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-graduation-cap"></i><span class="app-menu__label">&nbsp;Batches</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/courseadd/"><i class="fa fa-plus-square"></i>&nbsp;Add Course</a></li>
-            <li><a class="treeview-item" href="/courseview/"><i class="fa fa-search"></i>&nbsp;View Courses</a></li>
-            <li><a class="treeview-item" href="/courseeditview/"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit Course</a></li>
+            <li><a class="treeview-item" href="/batchadd/"><i class="fa fa-plus-square"></i>&nbsp;Add batch</a></li>
+            <li><a class="treeview-item" href="/batchview/"><i class="fa fa-search"></i>&nbsp;View batch</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit batch</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-star"></i><span class="app-menu__label">&nbsp;HOD</span><i class="treeview-indicator fa fa-angle-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/sethod/"><i class="fa fa-star-half-o"></i>&nbsp;Set HOD</a></li>
-            <li><a class="treeview-item" href="/hodview/"><i class="fa fa-search"></i>&nbsp;View HOD</a></li>
-          </ul>
-        </li>
+        <!--
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-key"></i><span class="app-menu__label">&nbsp;User login</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/useradd/"><i class="fa fa-unlock"></i>&nbsp;Generate credentials</a></li>
-            <li><a class="treeview-item" href="/userview/"><i class="fa fa-search"></i>&nbsp;View credentials</a></li>
-            <li><a class="treeview-item" href="/usereditview/"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit credentials</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-unlock"></i>&nbsp;Generate function</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-search"></i>&nbsp;View function</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit function</a></li>
           </ul>
-        </li>
+        </li> -->
         <!-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Pages</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="blank-page.html"><i class="icon fa fa-circle-o"></i> Blank Page</a></li>
@@ -145,7 +141,7 @@
 {% block content %}
 {% endblock %}
 <!-- Essential javascripts for application to work-->
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"></>
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>

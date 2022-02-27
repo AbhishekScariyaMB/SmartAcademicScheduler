@@ -22,7 +22,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Sl No</th>
+                  <!-- <th>Sl No</th> -->
                   <th>Photo</th>
                   <th>Name</th>
                   <th>Gender</th>
@@ -44,7 +44,7 @@
                 {% for r in rec %}  
                
                   {% if a.id == r.app_id and a.stage == '1'  %}
-                  <td>{{ forloop.parentloop.counter }}</td>
+                  <!-- <td>{{ forloop.counter }}</td> -->
                   <td><img class="img-thumbnail" src="{{a.photo}}" height="170" width="120"></td>
                   <td>{{ a.name }}</td>
                   <td>{{ a.gender }}</td>
@@ -93,7 +93,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Sl No</th>
+                  <!-- <th>Sl No</th> -->
                   <th>Photo</th>
                   <th>Name</th>
                   <th>Gender</th>
@@ -117,8 +117,8 @@
                 {% for r in rec %}  
                 
                   {% if a.id == r.app_id and a.stage == '1.25'  %}
-                  
-                    <td>{{ forloop.parentloop.counter }}</td>
+<!--                   
+                    <td>{{ forloop.counter }}</td> -->
                   
                   <td><img class="img-thumbnail" src="{{a.photo}}" height="170" width="120"></td>
                   <td>{{ a.name }}</td>
