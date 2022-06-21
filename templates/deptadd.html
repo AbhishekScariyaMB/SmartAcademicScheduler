@@ -19,7 +19,7 @@
     <ul class="warning">
            {% for message in messages %}
           
-         <div class="bs-component"><div class="alert alert-dismissible alert-success"> 
+         <div class="bs-component"><div li{% if message.tags %} class="alert alert-dismissible alert-{{ message.tags }}"{% endif %}> 
           
           <button class="close" type="button" data-dismiss="alert">✖</button>
           <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> </div></div>
@@ -38,6 +38,10 @@
                 <div class="form-group">
                   <label class="control-label">Name</label>
                   <input class="form-control" type="text" pattern="[a-zA-Z]+" placeholder="Enter department name" name="name" id="name" required maxlength="40">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <textarea class="form-control" rows="6" placeholder="Enter brief description" name="descrip" id="descrip" required maxlength="300"></textarea>
                 </div>
                 <!-- <div class="form-group">
                   <label class="control-label">Email</label>

@@ -19,6 +19,7 @@ class utype(models.Model):
 
 class department(models.Model):
     name=models.CharField(max_length=50)
+    descrip=models.CharField(max_length=300)
     status=models.CharField(max_length=5,default=1)
 
     class Meta:
@@ -29,6 +30,7 @@ class course(models.Model):
     duration=models.CharField(max_length=5)
     dept_id=models.BigIntegerField()
     status=models.CharField(max_length=5,default=1)
+    fee=models.CharField(max_length=7,default=25000)
     class Meta:
         db_table = "course"        
 

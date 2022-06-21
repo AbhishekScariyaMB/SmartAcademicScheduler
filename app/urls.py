@@ -4,6 +4,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
      path('',views.home,name='home'),
+     path('depts/',views.depts),
+     path('courses/',views.courses),
      path('login/',views.log_in,name='login'),
      path('dashboard/',views.user_login),
      path('teacher/',views.user_login),
@@ -27,6 +29,8 @@ urlpatterns = [
      path('courseupdate/',views.courseupdate),
      path('useradd/',views.useradd),
      path('teacheradd/',views.teacheradd),
+     path('admissionadd/',views.admissionadd),
+     path('admissiongen/',views.admissiongen),
      path('teachergen/',views.teachergen),
      path('userview/',views.userview),
      path('usereditview/',views.usereditview),

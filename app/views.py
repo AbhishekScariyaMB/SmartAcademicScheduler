@@ -8,6 +8,10 @@ from django.db.models import Q
 import cms.settings
 from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import pyplot as plt
+
 
 @cache_control(no_cache=True, must_revalidate=True)
 def func():
@@ -17,6 +21,22 @@ def func():
 # Create your views here.
 def home(request):
     return render(request,'home.html')
+
+def depts(request):
+    data=department.objects.all()
+    dep={
+        "dept_no":data
+    }
+    return render(request,'departments.html',dep) 
+
+def courses(request):
+    data=department.objects.all()
+    data2=course.objects.all()
+    d={
+        "dept_data":data,
+        "course_data":data2,
+    }
+    return render(request,'courses.html',d) 
 
 def log_in(request):
     return render(request,'login.html')    
@@ -62,6 +82,30 @@ def dash(request):
         return HttpResponseRedirect('/login')
     # id = request.session['id']
     # data=login.objects.get(id=id)
+    data=application.objects.all()
+    admitted=0
+    rejected=0
+    ongoing=0
+    for i in data:
+        if i.stage=='3':
+            admitted+=1
+        elif i.stage=='0':
+            rejected+=1
+        else:
+            ongoing+=1    
+    # y = np.array([ongoing, admitted, rejected])
+    # mylabels = ["Ongoing", "Admitted", "Rejected"]
+    # plt.legend()
+    # plt.pie(y, labels = mylabels)
+    total=[ongoing,admitted,rejected]
+    title = plt.title('Admissions')
+    title.set_ha("left")
+    plt.gca().axis("equal")
+    pie = plt.pie(total, startangle=0)
+    labels=["Ongoing", "Admitted", "Rejected"]
+    plt.legend(pie[0],labels, bbox_to_anchor=(0.8,0.5), loc="center right", fontsize=10,bbox_transform=plt.gcf().transFigure)
+    plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)    
+    plt.savefig('D:\Main Project\cms\static\\assets\images\pieadmission.png')
     return render(request, 'dashboard.html')  
 
 def dash2(request):
@@ -89,6 +133,7 @@ def dashboardref(request):
     uid=request.session.get('utype') 
     print(uid)
     if (uid == 1):   
+        data=application.objects.all()
         return render(request, 'dashboard.html') 
     elif (uid == 2):
         return render(request, 'teacher.html')    
@@ -108,7 +153,13 @@ def deptaddval(request):
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
     name = request.POST['name'] 
-    dept=department.objects.create(name=name)
+    descrip = request.POST['descrip']
+    data=department.objects.all()
+    for i in data:
+        if i.name == name:
+            messages.warning(request, 'Department already exists... Insertion failed!')
+            return redirect('/deptadd/')
+    dept=department.objects.create(name=name,descrip=descrip)
     dept.save()
     messages.success(request, 'Department added successfully...!')
     return redirect('/deptadd/')
@@ -153,6 +204,7 @@ def deptupdate(request):
     data2=course.objects.filter(dept_id=id)
     data.name=request.POST.get("name")
     data.status=request.POST.get("status")
+    data.descrip=request.POST.get("descrip")
     if data.status=='0':    
         for c in data2:
             c.status=data.status
@@ -185,7 +237,14 @@ def courseaddval(request):
     name = request.POST['name'] 
     duration = request.POST['duration']
     dept_id = request.POST['dept_id']  
-    c=course.objects.create(name=name,duration=duration,dept_id=dept_id)
+    fee = request.POST['fee']
+    data2 = course.objects.all()
+    for i in data2:
+        if i.name == name:
+            messages.warning(request, 'Course already exists..! Insertion failed!')
+            return redirect('/courseadd/')
+
+    c=course.objects.create(name=name,duration=duration,dept_id=dept_id,fee=fee)
     c.save()
     messages.success(request, 'Course added successfully...!')
     return redirect('/courseadd/')    
@@ -238,6 +297,7 @@ def courseupdate(request):
     data=course.objects.get(pk=id)
     data.name=request.POST.get("name")
     data.duration=request.POST.get("duration")
+    data.fee = request.POST['fee']
     data.dept_id=request.POST.get("dept")
     data.status=request.POST.get("status")
     data.save()
@@ -261,6 +321,33 @@ def teacheradd(request):
         "password":password
     }
     return render(request, 'teacheradd.html',dept)
+
+def admissionadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    password = User.objects.make_random_password(length=14, allowed_chars="abcdefghjkmnpqrstuvwxyz01234567889") 
+    dat={
+        "password":password
+    }
+    return render(request, 'admissionadd.html',dat)
+
+def admissiongen(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    email = request.POST['email'] 
+    password = request.POST['password']
+    data=login.objects.all()
+    for d in data:
+        if d.username == email:
+            messages.warning(request, 'User already exists...!')
+            return redirect('/useradd/')
+    l=login.objects.create(username=email,password=password,utype_id=4,status='1')
+    l.save()
+    login_id=l.id
+    messages.success(request, 'Admission in-charge added successfully...!')
+    return redirect('/useradd/')    
 
 def teachergen(request):
     if request.session.is_empty():
