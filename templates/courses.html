@@ -129,8 +129,8 @@ https://templatemo.com/tm-569-edu-meeting
             
               <h2>Courses</h2>
               <p>Here are the courses available in our prestigious college. </p>
-              <div class="table-responsive">
-              <table id="customers">
+              <div>
+              <table id="customers" class="table table-dark">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -144,7 +144,7 @@ https://templatemo.com/tm-569-edu-meeting
                     {% for i in course_data %}
                   <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td scope="row">{{ i.name }}</td>
+                    <td scope="row">{{ i.course_name }}</td>
                     {% for j in dept_data %}
                     {% if j.id == i.dept_id %}
                     <td scope="row">{{ j.name  }}</td>

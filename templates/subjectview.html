@@ -1,0 +1,71 @@
+{% extends 'hodbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Subjects </h1>
+        <p>List of subjects</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Subjects</li>
+        <li class="breadcrumb-item active"><a href="/subjectview/">View subjects</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Subjects</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Subject code</th>
+                  <th>Subject name</th>
+                  <th>Course</th>
+                  <th>Max number of students</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for s in subjects %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ s.subject_number }}</td>
+                  <td>{{ s.subject_name }}</td>
+                  <td>
+                  {% for c in courses %}
+                  {% for sub in c.subjects.all %}
+                  {% if s.subject_number == sub.subject_number %}
+                  {{ c.course_name }}<br><br>
+                  {% endif %}
+                  {% endfor %} 
+                  {% endfor %} 
+                </td>
+                  <td>{{ s.max_numb_students }}</td>
+                  <td>
+                  <form method="POST" action="/subjectedit/">
+                    {% csrf_token %}
+                    
+                    <input type="text" hidden value="{{ s.subject_number }}" name="subject_number">  
+               
+                <input class="btn btn-outline-info" type="submit" value="Edit">
+              </form>
+                  </td>
+                  
+                 
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

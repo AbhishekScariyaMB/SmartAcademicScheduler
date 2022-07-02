@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Timetable Scheduler
+        </title>
+       
+    </head>
+    <body>
+        <div class="main" >
+                <div class="logo">
+                    <h2>TIMETABLE GENERATOR</h2>
+                    <h4>Thanks to genetic algorithm</h4>
+                </div>
+{% for batch in batchs %}
+<h2 class="secHead">{{ batch.batch_id }} ({{ batch.course }})</h2>
+    <table class="table2">
+      <colgroup>
+        <col >
+        <col >
+        <col>
+        <col>
+        <col >
+        <col>
+      </colgroup>
+      <tr>
+        <th>Class #</th>
+        <th>Course</th>
+        <th>Venue(Block- Room)</th>
+        <th>teacher</th>
+        <th>Class Timing</th>
+      </tr>
+      {% for class in schedule %}
+        {% if class.batch == batch.batch_id %}
+        <tr>
+          <th>{{class.batch_id}}</th>
+          <td>{{class.subject}}</td>
+          <td>{{class.room}}</td>
+          <td>{{class.teacher}}</td>
+          <td>{{class.meeting_time}}</td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+
+{% endfor %}
+  <div class="extra">
+
+  </div>
+</body>
+</html>

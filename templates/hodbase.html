@@ -98,7 +98,7 @@
         </div>
       </div>
       <ul class="app-menu">
-        <li><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Home</span></a></li>
+        <li><a class="app-menu__item" href="/dashboardref/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Home</span></a></li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Admissions</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="/newadmissions/"><i class="fa fa-circle-o"></i>&nbsp;New Admissions</a></li>
@@ -113,6 +113,32 @@
             <li><a class="treeview-item" href="/batchadd/"><i class="fa fa-plus-square"></i>&nbsp;Add batch</a></li>
             <li><a class="treeview-item" href="/batchview/"><i class="fa fa-search"></i>&nbsp;View batch</a></li>
             <li><a class="treeview-item" href="#"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit batch</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-book"></i><span class="app-menu__label">&nbsp;&nbsp;Subjects</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="/subjectadd/"><i class="fa fa-plus-square"></i>&nbsp;Add subjects</a></li>
+            <li><a class="treeview-item" href="/subjectview/"><i class="fa fa-search"></i>&nbsp;View subjects</a></li>
+            <li><a class="treeview-item" href="/subjectaddcourse/"><i class="fa fa-plus-square"></i>&nbsp;Add subjects to courses</a></li>
+            <li><a class="treeview-item" href="/subjectcourseview/"><i class="fa fa-search"></i>&nbsp;View course-subject allocation</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-clock-o"></i><span class="app-menu__label">&nbsp;&nbsp;Class hours</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="/meetingadd/"><i class="fa fa-plus-square"></i>&nbsp;Add hour</a></li>
+            <li><a class="treeview-item" href="/meetingview/"><i class="fa fa-search"></i>&nbsp;View hours</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-window-maximize"></i><span class="app-menu__label">&nbsp;&nbsp;Classrooms</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="/roomadd/"><i class="fa fa-plus-square"></i>&nbsp;Add classroom</a></li>
+            <li><a class="treeview-item" href="/roomview/"><i class="fa fa-search"></i>&nbsp;View classrooms</a></li>
+          </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-calendar"></i><span class="app-menu__label">&nbsp;&nbsp;Timetable</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+          <ul class="treeview-menu">
+            <li><a class="treeview-item" href="/timetable/"><i class="fa fa-plus-square"></i>&nbsp;Generate timetable</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-search"></i>&nbsp;View timetable</a></li>
           </ul>
         </li>
         <!--
@@ -135,7 +161,7 @@
             <li><a class="treeview-item" href="page-error.html"><i class="icon fa fa-circle-o"></i> Error Page</a></li>
           </ul>
         </li> -->
-        <li><a class="app-menu__item" href="/logout/"><i class="fa fa-power-off"></i><span class="app-menu__label">&nbsp;&nbsp;Log out</span></a></li>
+        <li><a class="app-menu__item" href="/logout/"><i class="fa fa-power-off"></i><span class="app-menu__label">&nbsp;&nbsp;&nbsp;Log out</span></a></li>
       </ul>
     </aside>
 {% block content %}

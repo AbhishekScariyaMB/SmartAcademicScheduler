@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from app.models import login , utype, department, course, teacher, application, parent, record, student, batch
+from app.models import login , utype, department, course, teacher, application, parent, record, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -10,7 +10,301 @@ from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control
 import matplotlib.pyplot as plt
 import numpy as np
+from openpyxl import Workbook
 from matplotlib import pyplot as plt
+#------------------------------
+import random as rnd
+POPULATION_SIZE = 9
+NUMB_OF_ELITE_SCHEDULES = 1
+TOURNAMENT_SELECTION_SIZE = 3
+MUTATION_RATE = 0.05
+D = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+HOURS=[1,2,3,4,5,6]
+#------------------------------
+class Data:
+    def __init__(self):
+        self._rooms = Room.objects.all()
+        self._meetingTimes = MeetingTime.objects.all()
+        self._teachers = teacher.objects.all()
+        self._subjects = subject.objects.all()
+        self._courses = course.objects.all()
+
+    def get_rooms(self): return self._rooms
+
+    def get_teachers(self): return self._teachers
+
+    def get_subjects(self): return self._subjects
+
+    def get_courses(self): return self._courses
+
+    def get_meetingTimes(self): return self._meetingTimes
+
+
+class Schedule:
+    def __init__(self):
+        self._data = data
+        self._classes = []
+        self._numberOfConflicts = 0
+        self._fitness = -1
+        self._classNumb = 0
+        self._isFitnessChanged = True
+
+    def get_classes(self):
+        self._isFitnessChanged = True
+        return self._classes
+
+    def get_numbOfConflicts(self): return self._numberOfConflicts
+
+    def get_fitness(self):
+        if self._isFitnessChanged:
+            self._fitness = self.calculate_fitness()
+            self._isFitnessChanged = False
+        return self._fitness
+
+    def initialize(self):
+        occupied_slots = {}
+        batchs = batch.objects.all()
+        for batche in batchs:
+            course = batche.course
+            n = batche.num_class_in_week         
+            if n <= len(MeetingTime.objects.all()):
+                subjects = course.subjects.all()
+                for subject in subjects:
+                    for i in range(n // len(subjects)):
+                        crs_inst = subject.teachers.all()
+                        newClass = Class(self._classNumb, course, batche.batch_id, subject)
+                        self._classNumb += 1
+                        a = data.get_meetingTimes()[rnd.randrange(0, len(MeetingTime.objects.all()))]
+                        newClass.set_meetingTime(a)                         
+                        newClass.set_room(data.get_rooms()[rnd.randrange(0, len(data.get_rooms()))])
+                        newClass.set_teacher(crs_inst[rnd.randrange(0, len(crs_inst))])
+                        self._classes.append(newClass)
+            else:
+                n = len(MeetingTime.objects.all())
+                subjects = course.subjects.all()
+                for subject in subjects:
+                    for i in range(n // len(subjects)):
+                        crs_inst = subject.teachers.all()
+                        newClass = Class(self._classNumb, course, batche.batch_id, subject)
+                        self._classNumb += 1
+                        newClass.set_meetingTime(data.get_meetingTimes()[rnd.randrange(0, len(MeetingTime.objects.all()))])
+
+                
+
+                        newClass.set_room(data.get_rooms()[rnd.randrange(0, len(data.get_rooms()))])
+                        newClass.set_teacher(crs_inst[rnd.randrange(0, len(crs_inst))])
+                        self._classes.append(newClass)
+
+              
+
+        return self
+
+    def calculate_fitness(self):
+        self._numberOfConflicts = 0
+        classes = self.get_classes()
+        #OBTAIN teacher DICT FOR HOUR CALCULATION
+        dat=Data()
+        teachers = dat.get_teachers()
+        x = (teachers[l].uid for l in range(len(teachers)))
+        y = 0
+        hour_count = dict.fromkeys(x, y)
+       
+
+        for i in range(len(classes)):
+            if classes[i].room.seating_capacity < int(classes[i].subject.max_numb_students):
+                self._numberOfConflicts += 1
+            
+            for x,y in hour_count.items():
+                if classes[i].teacher.uid == x:
+                    hour_count[x]+=1    
+
+            for j in range(len(classes)):
+                if j >= i:
+                    if (classes[i].meeting_time == classes[j].meeting_time) and \
+                            (classes[i].batch_id != classes[j].batch_id) and (classes[i].batch == classes[j].batch):
+                        if classes[i].room == classes[j].room:
+                            self._numberOfConflicts += 1
+                        if classes[i].teacher == classes[j].teacher:
+                            self._numberOfConflicts += 1
+        return 1 / (1.0 * self._numberOfConflicts + 1)
+
+
+class Population:
+    def __init__(self, size):
+        self._size = size
+        self._data = data
+        self._schedules = [Schedule().initialize() for i in range(size)]
+
+    def get_schedules(self):
+        return self._schedules
+
+
+class GeneticAlgorithm:
+    def evolve(self, population):
+        return self._mutate_population(self._crossover_population(population))
+
+    def _crossover_population(self, pop):
+        crossover_pop = Population(0)
+        for i in range(NUMB_OF_ELITE_SCHEDULES):
+            crossover_pop.get_schedules().append(pop.get_schedules()[i])
+        i = NUMB_OF_ELITE_SCHEDULES
+        while i < POPULATION_SIZE:
+            schedule1 = self._select_tournament_population(pop).get_schedules()[0]
+            schedule2 = self._select_tournament_population(pop).get_schedules()[0]
+            crossover_pop.get_schedules().append(self._crossover_schedule(schedule1, schedule2))
+            i += 1
+        return crossover_pop
+
+    def _mutate_population(self, population):
+        for i in range(NUMB_OF_ELITE_SCHEDULES, POPULATION_SIZE):
+            self._mutate_schedule(population.get_schedules()[i])
+        return population
+
+    def _crossover_schedule(self, schedule1, schedule2):
+        crossoverSchedule = Schedule().initialize()
+        for i in range(0, len(crossoverSchedule.get_classes())):
+            if rnd.random() > 0.5:
+                crossoverSchedule.get_classes()[i] = schedule1.get_classes()[i]
+            else:
+                crossoverSchedule.get_classes()[i] = schedule2.get_classes()[i]
+        return crossoverSchedule
+
+    def _mutate_schedule(self, mutateSchedule):
+        schedule = Schedule().initialize()
+        for i in range(len(mutateSchedule.get_classes())):
+            if MUTATION_RATE > rnd.random():
+                mutateSchedule.get_classes()[i] = schedule.get_classes()[i]
+        return mutateSchedule
+
+    def _select_tournament_population(self, pop):
+        tournament_pop = Population(0)
+        i = 0
+        while i < TOURNAMENT_SELECTION_SIZE:
+            tournament_pop.get_schedules().append(pop.get_schedules()[rnd.randrange(0, POPULATION_SIZE)])
+            i += 1
+        tournament_pop.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
+        return tournament_pop
+
+
+class Class:
+    def __init__(self, id, course, batch, subject):
+        self.batch_id = id
+        self.course = course
+        self.subject = subject
+        self.teacher = None
+        self.meeting_time = None
+        self.room = None
+        self.batch = batch
+
+    def get_id(self): return self.batch_id
+
+    def get_course(self): return self.course
+
+    def get_subject(self): return self.subject
+
+    def get_teacher(self): return self.teacher
+
+    def get_meetingTime(self): return self.meeting_time
+
+    def get_room(self): return self.room
+
+    def set_teacher(self, teacher): self.teacher = teacher
+
+    def set_meetingTime(self, meetingTime): self.meeting_time = meetingTime
+
+    def set_room(self, room): self.room = room
+
+
+data = Data()
+
+
+def context_manager(schedule):
+    classes = schedule.get_classes()
+    context = []
+    cls = {}
+    for i in range(len(classes)):
+        cls["batch"] = classes[i].batch_id
+        cls['course'] = classes[i].course.course_name
+        cls['subject'] = f'{classes[i].subject.subject_name} ({classes[i].subject.subject_number}, ' \
+                        f'{classes[i].subject.max_numb_students}'
+        cls['room'] = f'{classes[i].room.r_number} ({classes[i].room.seating_capacity})'
+        cls['teacher'] = f'{classes[i].teacher.name} ({classes[i].teacher.uid})'
+        cls['meeting_time'] = [classes[i].meeting_time.pid, classes[i].meeting_time.day, classes[i].meeting_time.time]
+        context.append(cls)
+    return context
+
+
+def home(request):
+    return render(request, 'index.html', {})
+
+
+def timetable(request):
+    schedule = []
+    population = Population(POPULATION_SIZE)
+    generation_num = 0
+    population.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
+    geneticAlgorithm = GeneticAlgorithm()
+    while population.get_schedules()[0].get_fitness() != 1.0:
+        generation_num += 1
+        print('\n> Generation #' + str(generation_num))
+        population = geneticAlgorithm.evolve(population)
+        population.get_schedules().sort(key=lambda x: x.get_fitness(), reverse=True)
+        schedule = population.get_schedules()[0].get_classes()
+
+    wb = Workbook()
+    batches=batch.objects.all()
+    hoursss=MeetingTime.objects.all()
+    for b in batches:
+        ws = wb.create_sheet(b.batch_id)
+        ws['A1']="DAY"
+        i=0
+        for row in ws.iter_rows(min_row=2, max_col=1, max_row=6):
+            for cell in row:
+                cell.value=str(D[i])
+                i+=1
+        i=0
+        for col in ws.iter_cols(min_col=2, max_col=7, max_row=1):
+            for cell in col:
+                cell.value=HOURS[i]
+                i+=1        
+    for classs in schedule:
+        mysheet=wb[classs.batch]
+        if(classs.meeting_time.pid) in range(1,7):
+            mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=classs.subject.subject_number
+        elif(classs.meeting_time.pid) in range(7,13): 
+            if(classs.meeting_time.pid%6==0):
+                mysheet.cell(row=3,column=7).value=classs.subject.subject_number       
+            else:
+                mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+        elif(classs.meeting_time.pid) in range(13,19):    
+             if(classs.meeting_time.pid%6==0):
+                 mysheet.cell(row=4,column=7).value=classs.subject.subject_number
+             else:
+                 mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+        elif(classs.meeting_time.pid) in range(19,25):    
+            if(classs.meeting_time.pid%6==0):
+                 mysheet.cell(row=5,column=7).value=classs.subject.subject_number
+            else:
+                 mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+        elif(classs.meeting_time.pid) in range(25,31):    
+            if(classs.meeting_time.pid%6==0):
+                 mysheet.cell(row=6,column=7).value=classs.subject.subject_number
+            else:
+                 mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number    
+    f=wb["Sheet"]
+    wb.remove(f)
+    wb.save('D:\Main Project\cms\\timetable\\timetable.xlsx')        
+
+    return render(request, 'timetable.html', {'schedule': schedule, 'batchs': batch.objects.all(),
+                                              'times': MeetingTime.objects.all()})
+
+
+#----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 
 @cache_control(no_cache=True, must_revalidate=True)
@@ -75,37 +369,45 @@ def user_login(request):
         return redirect('/login/')         
 
 def test_form(request):
-    return render(request, 'form-samples.html')
+    return render(request, 'form-samples-copy.html')
 def dash(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
     # id = request.session['id']
     # data=login.objects.get(id=id)
-    data=application.objects.all()
-    admitted=0
-    rejected=0
-    ongoing=0
-    for i in data:
-        if i.stage=='3':
-            admitted+=1
-        elif i.stage=='0':
-            rejected+=1
-        else:
-            ongoing+=1    
+
+
+    # data=application.objects.all()
+    # admitted=0
+    # rejected=0
+    # ongoing=0
+    # for i in data:
+    #     if i.stage=='3':
+    #         admitted+=1
+    #     elif i.stage=='0':
+    #         rejected+=1
+    #     else:
+    #         ongoing+=1    
+
+
     # y = np.array([ongoing, admitted, rejected])
     # mylabels = ["Ongoing", "Admitted", "Rejected"]
     # plt.legend()
     # plt.pie(y, labels = mylabels)
-    total=[ongoing,admitted,rejected]
-    title = plt.title('Admissions')
-    title.set_ha("left")
-    plt.gca().axis("equal")
-    pie = plt.pie(total, startangle=0)
-    labels=["Ongoing", "Admitted", "Rejected"]
-    plt.legend(pie[0],labels, bbox_to_anchor=(0.8,0.5), loc="center right", fontsize=10,bbox_transform=plt.gcf().transFigure)
-    plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)    
-    plt.savefig('D:\Main Project\cms\static\\assets\images\pieadmission.png')
+
+
+    # total=[ongoing,admitted,rejected]
+    # title = plt.title('Admissions')
+    # title.set_ha("left")
+    # plt.gca().axis("equal")
+    # pie = plt.pie(total, startangle=0)
+    # labels=["Ongoing", "Admitted", "Rejected"]
+    # plt.legend(pie[0],labels, bbox_to_anchor=(0.8,0.5), loc="center right", fontsize=10,bbox_transform=plt.gcf().transFigure)
+    # plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)    
+    # plt.savefig('D:\Main Project\cms\static\\assets\images\pieadmission.png')
+
+
     return render(request, 'dashboard.html')  
 
 def dash2(request):
@@ -240,11 +542,11 @@ def courseaddval(request):
     fee = request.POST['fee']
     data2 = course.objects.all()
     for i in data2:
-        if i.name == name:
+        if i.course_name == name:
             messages.warning(request, 'Course already exists..! Insertion failed!')
             return redirect('/courseadd/')
 
-    c=course.objects.create(name=name,duration=duration,dept_id=dept_id,fee=fee)
+    c=course.objects.create(course_name=name,duration=duration,dept_id=dept_id,fee=fee)
     c.save()
     messages.success(request, 'Course added successfully...!')
     return redirect('/courseadd/')    
@@ -338,12 +640,18 @@ def admissiongen(request):
         return HttpResponseRedirect('/login')
     email = request.POST['email'] 
     password = request.POST['password']
+    mailto = request.POST['mailto']
     data=login.objects.all()
     for d in data:
         if d.username == email:
             messages.warning(request, 'User already exists...!')
             return redirect('/useradd/')
     l=login.objects.create(username=email,password=password,utype_id=4,status='1')
+    subject = 'Login credentials'
+    message = f'Welcome to Smart Academic Scheduler. Here are your login credentials to manage student admission.\nUsername: {email}\nPassword: {password}'
+    email_from = cms.settings.EMAIL_HOST_USER
+    recipient_list = [mailto]
+    send_mail( subject, message, email_from, recipient_list )
     l.save()
     login_id=l.id
     messages.success(request, 'Admission in-charge added successfully...!')
@@ -356,12 +664,13 @@ def teachergen(request):
     email = request.POST['email'] 
     password = request.POST['password']
     dept_id = request.POST['dept_id']  
+    uid = request.POST['uid']
     data=login.objects.all()
     for d in data:
         if d.username == email:
             messages.warning(request, 'User already exists...!')
             return redirect('/useradd/')
-    l=login.objects.create(username=email,password=password,utype_id=2,status='1')
+    l=login.objects.create(username=email,password=password,utype_id=2,status='1',uid=uid)
     l.save()
     login_id=l.id
     t=teacher.objects.create(name='null',dob='2017-06-15',gender='null',address='null',email=email,dept_id=dept_id,qualification='null',login_id=login_id)
@@ -806,10 +1115,11 @@ def batchaddval(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
-    name=request.POST.get("name")
-    cid=request.POST.get("course_id")
-    tid=request.POST.get("teacher_id")
-    s=batch.objects.create(course_id=cid,teacher_id=tid,name=name)
+    batch_id=request.POST.get("batch_id")
+    num_class_in_week=request.POST.get("num_class_in_week")
+    class_teacher=request.POST.get("class_teacher")
+    course_id=request.POST.get("course_id")
+    s=batch.objects.create(course_id=course_id,class_teacher=class_teacher,num_class_in_week=num_class_in_week,batch_id=batch_id)
     s.save()
     return redirect('/batchadd/')
 
@@ -846,3 +1156,282 @@ def addstudent(request):
         stud.batch_id=bid
         stud.save()
     return redirect('/newadmissions/')    
+
+def subjectadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    hod=teacher.objects.get(login_id=id)
+    dept=hod.dept_id
+    data={
+        "deptid":dept,
+    }     
+    return render(request,'subjectadd.html',data)      
+
+
+
+def subjectaddval(request):
+    subject_number=request.POST.get("subject_number")
+    subject_name=request.POST.get("subject_name")
+    max_numb_students=request.POST.get("max_numb_students")
+    subject_type=request.POST.get("subject_type")
+    dept_id = request.POST.get("dept_id")
+    s=subject.objects.create(subject_number=subject_number,subject_name=subject_name,subject_type=subject_type,max_numb_students=max_numb_students,dept_id=dept_id)
+    s.save()
+    return redirect('/subjectadd')
+
+def subjectview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    hod=teacher.objects.get(login_id=id)
+    dept=hod.dept_id    
+    sub=subject.objects.filter(dept_id=dept)
+    c=course.objects.filter(dept_id=dept)
+    data={
+        "subjects":sub,
+        "courses":c,
+    }    
+    return render(request,'subjectview.html',data)
+
+def subjectedit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    s=request.POST["subject_number"]    
+    sub=subject.objects.get(subject_number=s)
+    data={
+        "subject":sub,
+    }    
+    return render(request,'subjectedit.html',data)
+
+def subjectupdateval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    subject_name=request.POST["subject_name"]
+    subject_type=request.POST["subject_type"]
+    max_numb_students=request.POST["max_numb_students"] 
+    pk=request.POST["pk"]
+    data=subject.objects.get(subject_number=pk)
+    data.subject_name=subject_name
+    data.subject_type=subject_type
+    data.max_numb_students=max_numb_students
+    data.save()
+    return redirect('/subjectview')
+
+def subjectaddcourse(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    hod=teacher.objects.get(login_id=id)
+    dept=hod.dept_id
+    c=course.objects.filter(dept_id=dept)
+    s=subject.objects.filter(dept_id=dept)
+    data={
+        "courses":c,
+        "subjects":s,
+    }
+    return render(request,'subjectaddcourse.html',data) 
+
+def subjectaddcourseval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    course_id=request.POST.get("course_id")
+    c=course.objects.get(id=course_id)
+    subjects=request.POST.getlist("subject_id[]")
+    
+    for i in subjects:
+        s=c.subjects.add(i)
+    return redirect('/subjectaddcourse') 
+
+def subjectcourseview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    c=course.objects.all()
+    data={
+        "courses":c,
+    }    
+    return render(request,'subjectcourseview.html',data)       
+
+def subjectcourseedit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    cid=request.POST["cid"]    
+    c=course.objects.get(id=cid)
+    s=subject.objects.all()
+    data={
+        "courses":c,
+        "subjects":s,
+    }
+    return render(request,'subjectcourseedit.html',data)
+
+def subjectcourseupdateval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    cid=request.POST.get("cid")
+    c=course.objects.get(id=cid)
+    subj=request.POST.getlist("subject_id[]")
+    sub=c.subjects.all()
+    print(sub)
+    for s in sub:
+        if s.subject_number not in subj:                                                                                    
+            s=c.subjects.remove(s)
+    return redirect('/subjectcourseview')
+
+def roomadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    return render(request,'roomadd.html') 
+
+def roomview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    r = Room.objects.all() 
+    data = {
+        "rooms" : r,
+    }   
+    return render(request,'roomview.html',data)
+
+def roomedit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id = request.POST["id"]    
+    r = Room.objects.get(id=id)
+    data = {
+        "room" : r,
+    }
+    return render(request,'roomeditview.html',data)
+
+def roomupdateval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id = request.POST["id"]
+    room = Room.objects.get(id=id)
+    room.r_number = request.POST["r_number"]
+    room.seating_capacity = request.POST["seating_capacity"]
+    room.save()
+    return redirect('/roomview')
+
+def roomaddval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    r_number=request.POST.get("r_number")
+    seating_capacity=request.POST.get("seating_capacity")
+    s=Room.objects.create(r_number=r_number,seating_capacity=seating_capacity)
+    s.save()
+    return redirect('/roomadd')    
+
+def meetingadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    hr=[]
+    day=[]
+    for i in time_slots:
+        hr.append(i[0])  
+    for i in DAYS_OF_WEEK:
+        day.append(i[0])     
+    data={
+        "hours":hr,
+        "da":day,
+    }
+    return render(request, 'meetingadd.html', data)
+
+def meetingview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    meetings = MeetingTime.objects.all()        
+    data={
+        "hours":meetings,
+     
+    }
+    return render(request, 'meetingview.html', data)
+
+def meetingedit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    pid=request.POST["pid"]    
+    meeting = MeetingTime.objects.get(pid=pid) 
+    hr=[]
+    day=[]
+    for i in time_slots:
+        hr.append(i[0])  
+    for i in DAYS_OF_WEEK:
+        day.append(i[0])   
+    data = {
+        "hour":meeting,
+        "days":day,
+        "hours":hr,
+        
+    }
+    return render(request, 'meetingeditview.html', data)
+
+def meetingupdateval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login') 
+    pid=request.POST["pid"] 
+    meeting = MeetingTime.objects.get(pid=pid) 
+    meeting.time = request.POST["time"]  
+    meeting.day = request.POST["day"]
+    meeting.save()
+    return redirect('/meetingview')  
+
+def meetingaddval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    pid=request.POST.get("pid")
+    time=request.POST.get("time")
+    day=request.POST.get("day")
+    s=MeetingTime.objects.create(pid=pid, time=time, day=day)
+    s.save()
+    return redirect('/meetingadd')
+
+def subjectaddteacher(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    hod=teacher.objects.get(login_id=id)
+    dept_id=hod.dept_id
+    t=teacher.objects.filter(dept_id=dept_id)
+    cid=request.POST.get("cid")    
+    c=course.objects.get(id=cid)
+    sub=c.subjects.all()
+      
+    data={
+        "subjects":sub,
+        "teachers":t,
+    }
+    print(data)
+    return render(request,"subjectaddteacher.html",data)           
+
+def subjectaddteacherval(request):
+    subject_number=request.POST.get("subject_number")
+    teacher_id=request.POST.getlist("teacher_id[]")
+    s=subject.objects.get(subject_number=subject_number)
+    for i in teacher_id:
+        c=s.teachers.add(i)
+    return redirect('/batchview')
+
+def timetablegen(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    return render(request,"timetablegen.html")

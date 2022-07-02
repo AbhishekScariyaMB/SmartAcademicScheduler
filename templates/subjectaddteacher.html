@@ -1,0 +1,72 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage teacher allocation</h1>
+          <p>Allocate subjects to teachers</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Course</li>
+          <li class="breadcrumb-item">Allocate subjects to teachers</li>
+        </ul>
+      </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="{{ message.tags }} "> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class=""{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Allocation</h3>
+            <div class="tile-body">
+              <form method="POST" action="/subjectaddteacherval/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label" for="subject_number">Subject</label>
+                    <select name="subject_number" class="form-control">
+                     {% for s in subjects %}      
+                  <option value="{{ s.subject_number }}">{{ s.subject_name }}</option>
+                     {% endfor %}
+                </select>
+            </div>  
+            <div class="form-group">
+                <label class="control-label">Teachers</label>
+            <div class="form-check">
+                {% for t in teachers %}
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="teacher_id" name="teacher_id[]" value="{{ t.id }}">{{ t.name }}
+                </label><br><br>
+                {% endfor %}
+              </div>
+          </div>
+        </div>
+        <div class>
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                 <input class="btn btn-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+                </div>
+                </div>
+               
+
+    </form>
+  
+      </div>
+      
+    </main>
+    
+  {% endblock %}

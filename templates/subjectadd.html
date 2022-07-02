@@ -1,0 +1,81 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage subjects</h1>
+          <p>Add new subject</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Subject</li>
+          <li class="breadcrumb-item"><a href="/subjectaddval/">Add subject</a></li>
+        </ul>
+      </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="{{ message.tags }} "> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class=""{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">New Subject</h3>
+            <div class="tile-body">
+              <form method="POST" action="/subjectaddval/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label">Subject Code</label>
+                    <input class="form-control" type="text" pattern="[a-zA-Z0-9-\s]+" placeholder="Enter subject code" name="subject_number" id="subject_number" required maxlength="15">
+                  </div>
+                  <div class="form-group">
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <input class="form-control" type="text" pattern="[a-zA-Z\s]+" placeholder="Enter subject name" name="subject_name" id="subject_name" required maxlength="50">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Max number of students</label>
+                  <input class="form-control" type="text" pattern="[0-9]+" placeholder="Enter max number of students" name="max_numb_students" id="max_numb_students" required maxlength="3">
+                </div>
+                <div class="form-group">
+                  <label class="control-label" for="subject_type">Subject type</label>
+                  <select name="subject_type" class="form-control">
+                        
+                <option value="theory">Theory</option>
+                <option value="lab">Lab</option>
+              </select>
+          </div>
+          <input type="hidden" name="dept_id" id="dept_id" value="{{ deptid }}">
+
+            </div>  
+          
+               
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                 <input class="btn btn-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+                </div>
+                </div>
+             </div>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  
+      </div>
+    </main>
+    
+  {% endblock %}

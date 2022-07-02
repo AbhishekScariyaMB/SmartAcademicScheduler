@@ -1,0 +1,63 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage Classrooms</h1>
+          <p>Edit classrooms</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Classrooms</li>
+          <li class="breadcrumb-item"><a href="/roomview/">Edit classroom</a></li>
+        </ul>
+      </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div li{% if message.tags %} class="alert alert-dismissible alert-{{ message.tags }}"{% endif %}> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Edit Classroom</h3>
+            <div class="tile-body">
+              <form method="POST" action="/roomupdateval/">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label">Room number</label>
+                  <input class="form-control" type="text" pattern="[a-zA-Z0-9]+" value="{{ room.r_number }}" name="r_number" id="r_number" required maxlength="6">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Seating capacity</label>
+                    <input class="form-control" type="text" pattern="[0-9]+" value="{{ room.seating_capacity }}" name="seating_capacity" id="seating_capacity" required maxlength="3">
+                    <input type="text" name="id" id="id" value="{{ room.id }}" hidden>
+                </div>
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                  <input class="btn btn-primary" type="submit" value="Update">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+                    
+                </div>
+                </div>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+      </div>
+    </main>
+    
+  {% endblock %}

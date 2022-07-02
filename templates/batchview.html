@@ -36,25 +36,32 @@
 
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td>{{ b.name }}</td>
+                  <td>{{ b.batch_id }}</td>
                   {% for c in course %}
                   {% if c.id == b.course_id %}
-                  <td>{{ c.name }}</td>
+                  <td>{{ c.course_name }}</td>
                   {% endif %}
                   {% endfor %} 
                   <td>{{ b.semester }}</td>
                   {% for t in teacher %}
-                  {% if b.teacher_id == t.id %}
+                  {% if b.class_teacher == t.id %}
                   <td>{{ t.name }}</td>
                   <td>
-                    <form method="POST" action="#">
+                    <!-- <form method="POST" action="#">
                         {% csrf_token %}
                         
-                        <input type="text" hidden value="{{ c.id }}" name="cid">  
-                        <input type="text" hidden value="{{ c.name }}" name="cname">
+                        <input type="text" hidden value="{{ b.course_id }}" name="cid">  
+                        <input type="text" hidden value="{{ c.course_name }}" name="cname">
                    
                     <input class="btn btn-outline-info" type="submit" value="Commence class">
-                  </form>
+                  </form><br> -->
+                  <form method="POST" action="/subjectaddteacher/">
+                    {% csrf_token %}
+                    
+                    <input type="text" hidden value="{{ b.course_id }}" name="cid">  
+               
+                <input class="btn btn-outline-info" type="submit" value="Teacher allocation">
+              </form>
                   </td>
                   {% endif %}
                   {% endfor %} 

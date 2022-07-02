@@ -1,0 +1,59 @@
+{% extends 'hodbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Manage class hours </h1>
+        <p>Edit period</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Class hours</li>
+        <li class="breadcrumb-item active"><a href="/meetingview/">View hours</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Class hours</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Time</th>
+                  <th>Day</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for h in hours %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ h.time }}</td>
+                  <td>{{ h.day }}</td>
+                  <td>
+                  <form method="POST" action="/meetingedit/">
+                    {% csrf_token %}
+                    
+                    <input type="text" hidden value="{{ h.pid }}" name="pid">  
+               
+                <input class="btn btn-outline-info" type="submit" value="Edit">
+              </form>
+                  </td>
+                  
+                 
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

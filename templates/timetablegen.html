@@ -1,0 +1,14 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+        <form action="/timetable_generation/" method="post">
+            {% csrf_token %}
+        <div class="col-lg-5">
+            <p class="bs-component">
+              <button class="btn btn-primary btn-lg btn-block" type="submit">Generate Timetable</button>
+            </p>
+        </form>
+    </main>
+    
+  {% endblock %}

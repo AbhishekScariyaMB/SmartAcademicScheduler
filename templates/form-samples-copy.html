@@ -1,0 +1,150 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage teacher allocation</h1>
+          <p>Allocate subjects to teachers</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Course</li>
+          <li class="breadcrumb-item">Allocate subjects to teachers</li>
+        </ul>
+      </div>
+      
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="{{ message.tags }} "> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class=""{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Allocation</h3>
+            <div class="tile-body">
+                <form method="POST" action="/subjectaddteacherval/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="control-label" for="subject_number">Subject</label>
+                        <select name="subject_number" class="form-control">
+                         {% for s in subjects %}      
+                      <option value="{{ s.subject_number }}">{{ s.subject_name }}</option>
+                         {% endfor %}
+                    </select>
+                </div>  
+                <div class="form-group">
+                    <label class="control-label">Teachers</label>
+                <div class="form-check">
+                    {% for t in teachers %}
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="teacher_id" name="teacher_id[]" value="{{ t.id }}">{{ t.name }}
+                    </label><br><br>
+                    {% endfor %}
+                  </div>
+              </div>
+              </form>
+            </div>
+            <div class="tile-footer">
+              <button class="btn btn-primary" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Register</h3>
+            <div class="tile-body">
+              <form class="form-horizontal">
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Name</label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="text" placeholder="Enter full name">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Email</label>
+                  <div class="col-md-8">
+                    <input class="form-control col-md-8" type="email" placeholder="Enter email address">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Address</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" rows="4" placeholder="Enter your address"></textarea>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Gender</label>
+                  <div class="col-md-9">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="gender">Male
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="gender">Female
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-md-3">Identity Proof</label>
+                  <div class="col-md-8">
+                    <input class="form-control" type="file">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-8 col-md-offset-3">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox">I accept the terms and conditions
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                  <button class="btn btn-primary" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearix"></div>
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Subscribe</h3>
+            <div class="tile-body">
+              <form class="row">
+                <div class="form-group col-md-3">
+                  <label class="control-label">Name</label>
+                  <input class="form-control" type="text" placeholder="Enter your name">
+                </div>
+                <div class="form-group col-md-3">
+                  <label class="control-label">Email</label>
+                  <input class="form-control" type="text" placeholder="Enter your email">
+                </div>
+                <div class="form-group col-md-4 align-self-end">
+                  <button class="btn btn-primary" type="button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Subscribe</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  {% endblock %}

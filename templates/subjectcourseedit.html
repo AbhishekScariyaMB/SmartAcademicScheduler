@@ -1,0 +1,76 @@
+{% extends 'hodbase.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Manage courses</h1>
+          <p>Edit course-subject allocation</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Course</li>
+          <li class="breadcrumb-item"><a href="/subjectcourseview/">Edit course-subject allocation</a></li>
+        </ul>
+      </div>
+    
+      {% if messages %}
+      <div class="col-lg-4">
+    <ul class="warning">
+           {% for message in messages %}
+          
+         <div class="bs-component"><div class="{{ message.tags }} "> 
+          
+          <button class="close" type="button" data-dismiss="alert">✖</button>
+          <li{% if message.tags %} class=""{% endif %}>{{ message }}</li> </div></div>
+       
+           {% endfor %}
+   </ul>
+  </div>
+{% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Edit allocation</h3>
+            <div class="tile-body">
+              <form method="POST" action="/subjectcourseupdateval/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label" for="course_name">Course</label>
+                    <input type="text" value="{{ courses.course_name }}" name="course_name" id="course_name" disabled>
+            </div>  
+            <div class="form-group">
+                <label class="control-label">Subjects</label>
+            <div class="form-check">
+                {% for sub in courses.subjects.all %}
+                {% for s in subjects %}
+                
+                {% if  s.subject_number == sub.subject_number %}
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" id="subject_id" name="subject_id[]" value="{{ s.subject_number }}" checked>{{ s.subject_name }}
+                </label><br><br>
+               
+                {% endif %}  
+                {% endfor %}
+                {% endfor %}
+              </div>
+          </div>
+               <input type="text" value="{{ courses.id }}" name="cid" id="cid" hidden>
+            <div class="tile-footer">
+              <div class="row">
+                <div class="col-md-8 col-md-offset-3">
+                 <input class="btn btn-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+                </div>
+                </div>
+             </div>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  
+      </div>
+    </main>
+    
+  {% endblock %}

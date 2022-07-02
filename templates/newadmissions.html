@@ -36,7 +36,7 @@
                 
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td>{{ c.name }}</td>
+                  <td>{{ c.course_name }}</td>
                   <td>{{ c.duration }}</td>
                  
                   {% if c.status == '1' %}
@@ -50,7 +50,7 @@
                       {% csrf_token %}
                       
                       <input type="text" hidden value="{{ c.id }}" name="cid">  
-                      <input type="text" hidden value="{{ c.name }}" name="cname">
+                      <input type="text" hidden value="{{ c.course_name }}" name="cname">
                  
                   <input class="btn btn-outline-info" type="submit" value="View admissions">
                 </form></td>

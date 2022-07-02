@@ -1,16 +1,16 @@
-{% extends 'dashbase.html' %}
+{% extends 'hodbase.html' %}
 {% load static %}
 {% block content %}
 <main class="app-content">
     <div class="app-title">
       <div>
-        <h1><i class="fa fa-th-list"></i> Courses Offered </h1>
-        <p>List of courses</p>
+        <h1><i class="fa fa-th-list"></i> Course-subject allocation</h1>
+        <p>List of subjects in each course</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-        <li class="breadcrumb-item">Courses</li>
-        <li class="breadcrumb-item active"><a href="/courseeditview/">Edit Courses</a></li>
+        <li class="breadcrumb-item">Course-subject allocation</li>
+        <li class="breadcrumb-item active"><a href="/subjectcourseview/">View Course-subject allocation</a></li>
       </ul>
     </div>
     
@@ -24,39 +24,38 @@
                 <tr>
                   <th>Sl No</th>
                   <th>Course name</th>
-                  <th>Course duration</th>
-                  <th>Tuition fee</th>
-                  <th>Department</th>
-                  <th>Status</th>
+                  <th>Duration</th>
+                  <th>Fees</th>
+                  <th>Subjects</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
               
-                {% for c in course %}
+                {% for c in courses %}
 
                 <tr>
                   <td>{{ forloop.counter }}</td>
                   <td>{{ c.course_name }}</td>
                   <td>{{ c.duration }}</td>
                   <td>{{ c.fee }}</td>
-                  {% for d in dept %}
-                  {% if c.dept_id == d.id %}
-                  <td>{{ d.name }}</td> 
+                  <td>
+                  {% for sub in c.subjects.all %}
                   
-                  
-                  {% endif %}
+                 {{ sub.subject_name }}<br><br>
                   {% endfor %} 
-                  {% if c.status == '1' %}
-                  <td>Active</td>
-                  {% else %}
-                  <td>Inactive</td>
-                  {% endif %}
-                  <form method="POST" action="/courseedit/">
+                 </td>
+                  <td>
+                  <form method="POST" action="/subjectcourseedit/">
                     {% csrf_token %}
-                  <input type="text" hidden value="{{ c.id }}" name="cid">
+                    
+                    <input type="text" hidden value="{{ c.id }}" name="cid">  
+               
+                <input class="btn btn-outline-info" type="submit" value="Edit">
+              </form>
+                  </td>
+                  
                  
-                  <td><input class="btn btn-warning" type="submit" value="Edit"></td>
-                </form>
                 </tr>
                 {% endfor %} 
               </tbody>
