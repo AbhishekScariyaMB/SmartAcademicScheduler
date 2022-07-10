@@ -1,4 +1,4 @@
-{% extends 'hodbase.html' %}
+{% extends 'teacherbase.html' %}
 {% load static %}
 {% block content %}
 <main class="app-content">
@@ -10,14 +10,14 @@
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Timetable</li>
-        <li class="breadcrumb-item active"><a href="/timetableview/">View timetable</a></li>
+        <li class="breadcrumb-item active"><a href="/teacher_timeview/">View timetable</a></li>
       </ul>
     </div>
     
       <div class="clearfix"></div>
       <div class="col-md-12">
         <div class="tile">
-            <form method="POST" action="/timetableview/">
+            <form method="POST" action="/teacher_timeview/">
                 {% csrf_token %}
                 <div class="form-group">
                     <label class="control-label" for="bid">Batch</label>
@@ -52,14 +52,19 @@
 
 
                 {% for t in values%}     
-                    
-                  <td>{{ t }}</td>  
-                  {% ifequal forloop.counter|divisibleby:"7" True %}            
+                {% if uid in t %}
+                  <td>{{ t }}</td>
+                  
+                  {% ifequal forloop.counter|divisibleby:"7" True %}    
+                  {% else %}        
                   </tr><tr> 
                   {% endifequal %} 
                   
-                  
-                 
+                  {}
+                {% if t in d %}
+                <td>{{ t }}</td>
+
+                {% endif %}
                 {% endfor %} 
                 {% endfor %}
               </tbody>

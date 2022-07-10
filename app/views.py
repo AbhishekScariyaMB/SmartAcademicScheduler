@@ -1603,3 +1603,31 @@ def rejectapp1(request,id):
     a.stage='rejected'
     a.save()
     return redirect('/appliview2')
+
+def teacher_timeview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login') 
+    id=request.session['id']
+    wb = openpyxl.load_workbook('D:\python\\Smart Academic Scheduler\\SmartAcademicScheduler\\timetable\\timetable.xlsx') 
+    # izumi path = D:\Main Project\cms\\timetable\\timetable.xlsx
+    # Adarsh path=D:\python\Smart Academic Scheduler\SmartAcademicScheduler\timetable    
+    batches = batch.objects.all()
+    bat = request.POST.get("bid", batches[0].batch_id)
+    schedule = {}
+    schedule.update({bat : []})
+    mysheet=wb[bat]
+    for i in range(2,7):
+        for j in range(1,8):
+            x = mysheet.cell(row=i, column=j)
+            schedule[bat].append(x.value)
+    t=teacher.objects.get(login_id=id)
+    uid=t.uid 
+    data = {
+        "timetable":schedule,
+        "batch":batches,
+        "uid":uid,
+        "d":D,
+    }           
+    print(data)
+    return render(request, 'teacher_timeview.html',data)
