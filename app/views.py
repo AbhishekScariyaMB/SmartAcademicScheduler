@@ -1549,6 +1549,7 @@ def teacherupdate(request):
         t.save() 
     return redirect('/teacherprofile')
 
+
 def timetableview(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
@@ -1569,3 +1570,36 @@ def timetableview(request):
     }            
     print(data)
     return render(request,'timetableview.html',data)
+
+def studentview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    b=batch.objects.get(class_teacher=t.id)
+    s=student.objects.filter(batch_id=b.batch_id)
+    list=[]
+    for i in s:
+        a=application.objects.get(id=i.app_id)
+        list.append(a)
+    print(list)
+    return render(request,'studentview.html',{'l':list})
+
+def rejectapp(request,id):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    a=application.objects.get(id=id)
+    a.stage='rejected'
+    a.save()
+    return redirect('/appliview')
+
+def rejectapp1(request,id):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    a=application.objects.get(id=id)
+    a.stage='rejected'
+    a.save()
+    return redirect('/appliview2')

@@ -31,7 +31,7 @@
                   <th>X<sup>th</sup> score</th>
                   <th>XII<sup>th</sup> score</th>
                   <th>UG score</th>  
-                  <th>Action</th>                  
+                  <th colspan="2">Action</th>                  
 
                 </tr> <tr>
                 {% if not app %}
@@ -66,6 +66,9 @@
                
                 <input class="btn btn-outline-info" type="submit" value="Verify">
               </form>
+                </td>
+                <td>
+                  <a href="/rejectapp1/{{a.id}}" class="btn btn-outline-danger">Reject</a>
                 </td>
                 {% endif %}                
                 </tr>

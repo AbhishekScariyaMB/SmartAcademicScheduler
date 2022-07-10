@@ -91,6 +91,21 @@
                   {% else %}
                   <div class="form-group row">
                     <label class="control-label col-md-4">Gender</label>
+                    {% if t.gender == 'male' %}
+                    <div class="col-md-9">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="male" required checked>Male
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="female" >Female
+                        </label>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% if t.gender == 'female' %}
                     <div class="col-md-9">
                       <div class="form-check">
                         <label class="form-check-label">
@@ -103,6 +118,7 @@
                         </label>
                       </div>
                     </div>
+                    {% endif %}
                   </div>
                 </div>
                   {% endif %}
