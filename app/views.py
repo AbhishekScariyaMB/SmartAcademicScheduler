@@ -1545,3 +1545,17 @@ def teacherupdate(request):
         t.photo=uploaded_file_url   
         t.save() 
     return redirect('/teacherprofile')
+
+def studentview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    b=batch.objects.get(class_teacher=id)
+    s=student.objects.filter(batch_id=b.id)
+    list=[]
+    for i in s:
+        a=application.objects.get(id=i.app_id)
+        list.append(a)
+    print(list)
+    return render(request,'studentview.html',{'l':list})
