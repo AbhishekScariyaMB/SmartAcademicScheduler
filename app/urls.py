@@ -91,6 +91,7 @@ urlpatterns = [
      path('timetable/', views.timetablegen),
      path('profile/',views.profile),
      path('profileupdate/',views.profileupdate),
+     path('teacherview/',views.teacherview),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

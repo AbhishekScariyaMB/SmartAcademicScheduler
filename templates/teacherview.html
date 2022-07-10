@@ -1,0 +1,63 @@
+{% extends 'hodbase.html' %}
+{% load static %}
+{% block content %}
+<!-- <style>
+img
+{
+background-image:url("{% static 'images/teacher.jpg' %}");
+}
+</style> -->
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Set HOD </h1>
+        <p>List of teachers</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Set HOD</li>
+        <li class="breadcrumb-item active"><a href="">View teachers</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Teachers</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Photo</th>
+                  <th>Name</th>
+                  <th>Highest qualifiication</th>
+                  <th>DOB</th>
+                  <th>Gender</th>
+                  <th>Phone no</th>
+                  <th>E-mail id</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for t in teacher %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td><img class="rounded-circle" src="{{t.photo}}" height="170" width="170" alt="Teacher registration pending"></td>
+                  <td>{{ t.name }}</td>
+                  <td>{{ t.qualification }}</td>
+                  <td>{{ t.dob }}</td>
+                  <td>{{ t.gender }}</td>
+                  <td>{{ t.phone }}</td>
+                  <td>{{ t.email }}</td>
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

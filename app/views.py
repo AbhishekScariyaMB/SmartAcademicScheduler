@@ -1502,3 +1502,13 @@ def profileupdate(request):
         t.photo=uploaded_file_url   
         t.save() 
     return redirect('/profile')
+
+def teacherview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session['id']
+    d=teacher.objects.get(id=id)
+    dep=teacher.objects.filter(dept_id=d.dept_id)
+    data={'teacher':dep,}
+    return render(request, 'teacherview.html',data)
