@@ -97,6 +97,7 @@ urlpatterns = [
      path('timetableview/',views.timetableview),
      path('studentview/',views.studentview),
      path('rejectapp/<id>',views.rejectapp),
+     path('teacher_timeview/',views.teacher_timeview),
      path('rejectapp1/<id>',views.rejectapp1),
  ]
 if settings.DEBUG:
