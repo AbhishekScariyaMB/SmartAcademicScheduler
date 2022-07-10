@@ -52,20 +52,17 @@
 
 
                 {% for t in values%}     
-                {% if uid in t %}
+                {% if uid in t or t in d %}
                   <td>{{ t }}</td>
-                  
-                  {% ifequal forloop.counter|divisibleby:"7" True %}    
-                  {% else %}        
-                  </tr><tr> 
-                  {% endifequal %} 
-                  
-                  {}
-                {% if t in d %}
+                {% elif t in d %} 
                 <td>{{ t }}</td>
-
+                {% else %}
+                <td>NONE</td>
                 {% endif %}
-                {% endfor %} 
+                  {% ifequal forloop.counter|divisibleby:"7" True %}    
+                  </tr><tr> 
+                  {% endifequal %}
+                  {% endfor %} 
                 {% endfor %}
               </tbody>
             </table>

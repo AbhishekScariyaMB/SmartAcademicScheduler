@@ -1609,7 +1609,7 @@ def teacher_timeview(request):
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login') 
     id=request.session['id']
-    wb = openpyxl.load_workbook('D:\python\\Smart Academic Scheduler\\SmartAcademicScheduler\\timetable\\timetable.xlsx') 
+    wb = openpyxl.load_workbook('D:\Main Project\cms\\timetable\\timetable.xlsx') 
     # izumi path = D:\Main Project\cms\\timetable\\timetable.xlsx
     # Adarsh path=D:\python\Smart Academic Scheduler\SmartAcademicScheduler\timetable    
     batches = batch.objects.all()
