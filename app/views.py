@@ -1512,3 +1512,36 @@ def teacherview(request):
     dep=teacher.objects.filter(dept_id=d.dept_id)
     data={'teacher':dep,}
     return render(request, 'teacherview.html',data)
+
+def teacherprofile(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session['id']
+    t=teacher.objects.get(login_id=id)
+    data={"t":t}
+    return render(request, 'teacherprofile.html',data)
+
+def teacherupdate(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")    
+    t = teacher.objects.get(login_id=id)
+    t.name = request.POST["name"]
+    t.dob = request.POST["dob"]
+    t.gender = request.POST["gender"]
+    t.address = request.POST["address"]
+    t.email = request.POST["email"]
+    t.phone = request.POST["phone"]
+    t.qualification = request.POST["qualification"]
+    if 'photo' not in request.FILES:
+        t.save()
+    else:
+        Photo=request.FILES['photo']
+        fs=FileSystemStorage()
+        fn=fs.save(Photo.name, Photo)
+        uploaded_file_url=fs.url(fn)
+        t.photo=uploaded_file_url   
+        t.save() 
+    return redirect('/teacherprofile')

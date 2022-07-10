@@ -1,0 +1,148 @@
+{% extends 'teacherbase.html' %}
+{% load static%}
+{% block content %}
+
+    <main class="app-content">
+      <div class="row user">
+        <div class="col-md-12">
+          <div class="profile">
+            <div class="info"><img class="rounded" src="{{ t.photo }}" height="100" width="400" alt="profile image">
+              <h4>{{ t.name }}</h4>
+            </div>
+            <div class="cover-image"></div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="tile p-0">
+            <!-- <ul class="nav flex-column nav-tabs user-tabs">
+              <li class="nav-item"><a class="nav-link active" href="#user-timeline" data-toggle="tab">Timeline</a></li>
+              <li class="nav-item"><a class="nav-link" href="#user-settings" data-toggle="tab">Settings</a></li>
+            </ul> -->
+          </div>
+        </div>
+        <div class="col-md-9">
+          <!-- <div class="tab-content">
+            <div class="tab-pane active" id="user-timeline">
+              <div class="timeline-post">
+                <div class="post-media"><a href="#"><img src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg"></a>
+                  <div class="content">
+                    <h5><a href="#">John Doe</a></h5>
+                    <p class="text-muted"><small>2 January at 9:30</small></p>
+                  </div>
+                </div>
+                <div class="post-content">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,	quis tion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <ul class="post-utility">
+                  <li class="likes"><a href="#"><i class="fa fa-fw fa-lg fa-thumbs-o-up"></i>Like</a></li>
+                  <li class="shares"><a href="#"><i class="fa fa-fw fa-lg fa-share"></i>Share</a></li>
+                  <li class="comments"><i class="fa fa-fw fa-lg fa-comment-o"></i> 5 Comments</li>
+                </ul>
+              </div>
+              <div class="timeline-post">
+                <div class="post-media"><a href="#"><img src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg"></a>
+                  <div class="content">
+                    <h5><a href="#">John Doe</a></h5>
+                    <p class="text-muted"><small>2 January at 9:30</small></p>
+                  </div>
+                </div>
+                <div class="post-content">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,	quis tion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <ul class="post-utility">
+                  <li class="likes"><a href="#"><i class="fa fa-fw fa-lg fa-thumbs-o-up"></i>Like</a></li>
+                  <li class="shares"><a href="#"><i class="fa fa-fw fa-lg fa-share"></i>Share</a></li>
+                  <li class="comments"><i class="fa fa-fw fa-lg fa-comment-o"></i> 5 Comments</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="user-settings">-->
+              <br><br><br>
+              <div class="tile user-settings">
+                <h4 class="line-head">My Profile</h4> 
+                <form method="POST" action='/teacherupdate/' enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="row mb-4">
+                    <div class="col-md-4">
+                      <label>Name</label>
+                      <input class="form-control" type="text" name="name" value="{{ t.name }}" required>
+                    </div>
+                    <div class="col-md-4">
+                      <label>Date of Birth</label>
+                      <input class="form-control" type="date" name="dob" value='{{ t.dob|date:"Y-m-d" }}' required>
+                    </div><br><br>
+                    {% if hod.gender == "male" %}
+                    <div class="form-group row">
+                      <label class="control-label col-md-4">Gender</label>
+                      <div class="col-md-9">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="gender" value="male" required checked>Male
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="gender" value="female">Female
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <div class="form-group row">
+                    <label class="control-label col-md-4">Gender</label>
+                    <div class="col-md-9">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="male" required>Male
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="radio" name="gender" value="female" checked>Female
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col-md-8 mb-4">
+                      <label>Address</label>
+                      <textarea class="form-control" name="address" required>{{ t.address }}</textarea>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-8 mb-4">
+                      <label>Email</label>
+                      <input class="form-control" type="email" name="email" value="{{ t.email }}" required>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-8 mb-4">
+                      <label>Phone number</label>
+                      <input class="form-control" type="text" name="phone" value="{{ t.phone }}" required>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-8 mb-4">
+                      <label>Qualification</label>
+                      <input class="form-control" type="text" name="qualification" value="{{ t.qualification }}" required>
+                    </div>
+                  </div>
+                  <div class="clearfix">
+                    <div class="col-md-8 mb-4">
+                      <label>Photo</label>
+                      <input class="form-control" type="file" name="photo">
+                    </div>
+                  </div>
+                  <div class="row mb-10">
+                    <div class="col-md-12">
+                      <input class="btn btn-primary" type="submit" value="Save">
+                    </div></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    {% endblock %}
