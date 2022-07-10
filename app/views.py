@@ -1562,3 +1562,21 @@ def studentview(request):
         list.append(a)
     print(list)
     return render(request,'studentview.html',{'l':list})
+
+def rejectapp(request,id):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    a=application.objects.get(id=id)
+    a.stage='rejected'
+    a.save()
+    return redirect('/appliview')
+
+def rejectapp1(request,id):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    a=application.objects.get(id=id)
+    a.stage='rejected'
+    a.save()
+    return redirect('/appliview2')
