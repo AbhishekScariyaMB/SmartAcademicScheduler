@@ -1553,8 +1553,9 @@ def studentview(request):
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
     id=request.session.get("id")
-    b=batch.objects.get(class_teacher=id)
-    s=student.objects.filter(batch_id=b.id)
+    t=teacher.objects.get(login_id=id)
+    b=batch.objects.get(class_teacher=t.id)
+    s=student.objects.filter(batch_id=b.batch_id)
     list=[]
     for i in s:
         a=application.objects.get(id=i.app_id)
