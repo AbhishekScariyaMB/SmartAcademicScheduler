@@ -11,6 +11,7 @@ from django.views.decorators.cache import cache_control
 import matplotlib.pyplot as plt
 import numpy as np
 from openpyxl import Workbook
+import openpyxl
 from matplotlib import pyplot as plt
 #------------------------------
 import random as rnd
@@ -1547,3 +1548,24 @@ def teacherupdate(request):
         t.photo=uploaded_file_url   
         t.save() 
     return redirect('/teacherprofile')
+
+def timetableview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login') 
+    wb = openpyxl.load_workbook('D:\Main Project\cms\\timetable\\timetable.xlsx')     
+    batches = batch.objects.all()
+    bat = request.POST.get("bid", batches[0].batch_id)
+    schedule = {}
+    schedule.update({bat : []})
+    mysheet=wb[bat]
+    for i in range(2,7):
+        for j in range(1,8):
+            x = mysheet.cell(row=i, column=j)
+            schedule[bat].append(x.value)
+    data = {
+        "timetable":schedule,
+        "batch":batches,
+    }            
+    print(data)
+    return render(request,'timetableview.html',data)

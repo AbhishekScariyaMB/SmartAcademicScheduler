@@ -94,6 +94,7 @@ urlpatterns = [
      path('teacherview/',views.teacherview),
      path('teacherprofile/',views.teacherprofile),
      path('teacherupdate/',views.teacherupdate),
+     path('timetableview/',views.timetableview),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 
