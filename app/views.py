@@ -126,6 +126,8 @@ class Schedule:
                             self._numberOfConflicts += 1
                         if classes[i].teacher == classes[j].teacher:
                             self._numberOfConflicts += 1
+
+                            
         return 1 / (1.0 * self._numberOfConflicts + 1)
 
 
@@ -270,27 +272,27 @@ def timetable(request):
     for classs in schedule:
         mysheet=wb[classs.batch]
         if(classs.meeting_time.pid) in range(1,7):
-            mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+            mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
         elif(classs.meeting_time.pid) in range(7,13): 
             if(classs.meeting_time.pid%6==0):
-                mysheet.cell(row=3,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)    
+                mysheet.cell(row=3,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)   
             else:
-                mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
         elif(classs.meeting_time.pid) in range(13,19):    
              if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=4,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                 mysheet.cell(row=4,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
              else:
-                 mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                 mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
         elif(classs.meeting_time.pid) in range(19,25):    
             if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=5,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                 mysheet.cell(row=5,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
             else:
-                 mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                 mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
         elif(classs.meeting_time.pid) in range(25,31):    
             if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=6,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
+                 mysheet.cell(row=6,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
             else:
-                 mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)   
+                 mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)  
     f=wb["Sheet"]
     wb.remove(f)
     wb.save('D:\Main Project\cms\\timetable\\timetable.xlsx')        
