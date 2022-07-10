@@ -66,7 +66,7 @@ class department(models.Model):
 
 class teacher(models.Model):
     name=models.CharField(max_length=50)
-    dob=models.DateField()
+    dob=models.DateField(null=True)
     gender=models.CharField(max_length=15)
     address=models.CharField(max_length=200)
     email=models.CharField(max_length=30)
@@ -124,7 +124,7 @@ class record(models.Model):
 
 class student(models.Model):
     app_id=models.BigIntegerField(default=0)
-    batch_id=models.BigIntegerField(default=0)
+    batch_id=models.CharField(max_length=100,default=0)
     class Meta:
         db_table = "student"   
 

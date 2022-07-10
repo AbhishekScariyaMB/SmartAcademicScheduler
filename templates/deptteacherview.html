@@ -1,6 +1,12 @@
 {% extends 'dashbase.html' %}
 {% load static %}
 {% block content %}
+<!-- <style>
+img
+{
+background-image:url("{% static 'images/teacher.jpg' %}");
+}
+</style> -->
 <main class="app-content">
     <div class="app-title">
       <div>
@@ -39,7 +45,7 @@
 
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td><img class="rounded-circle" src="{{t.photo}}" height="170" width="170"></td>
+                  <td><img class="rounded-circle" src="{{t.photo}}" height="170" width="170" alt="Teacher registration pending"></td>
                   <td>{{ t.name }}</td>
                   <td>{{ t.qualification }}</td>
                   <td>{{ t.dob }}</td>

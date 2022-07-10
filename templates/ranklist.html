@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 <main class="app-content">
+  
     <div class="app-title">
       <div>
         <h1><i class="fa fa-th-list"></i> Rank List of applicants</h1>
@@ -30,7 +31,24 @@
                   <th>Phone</th>
                   <th>Action</th>
                   
-                  <form method="POST" action="/sendinvite/">
+                  <form method="POST" action="/sendinvite/" name="myform">
+                    <script>
+                    function validate() {
+                    var selectedText = document.getElementById('date').value;
+                    var selectedDate = new Date(selectedText);
+                    var now = new Date();
+                    if (selectedDate <= now) {
+                      document.getElementById("b").style.display="inline";
+                      document.getElementById("b").innerHTML="Please enter valid date";
+                      document.getElementById("date").value = "";
+                      document.myform.date.focus();
+                     return false;
+                    }
+                    else{
+                      document.getElementById("b").style.display="none";
+                    }
+                  }
+                  </script>
                     {% csrf_token %}
                 </tr>
                 <tr>
@@ -65,8 +83,8 @@
                     
                         <label>Interview date</label>
                        
-                          <input class="form-control" type="date"  name="date" required >
-                         
+                          <input class="form-control" type="date"  name="date" id="date" required onchange="return validate();">
+                          <span id="b" class="badge badge-danger"></span>
                        
                       </td> 
                         
@@ -78,7 +96,9 @@
                 </tr>
               </thead>
               <tbody>
-              
+           
+
+                  
               
             
   </main>

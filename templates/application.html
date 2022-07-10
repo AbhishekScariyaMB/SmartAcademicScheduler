@@ -25,6 +25,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
   </head>
   <body class="app sidebar-mini" style="background-image: url('{% static 'images/formbg.jpg' %}'); background-attachment:fixed;">
       <center>
@@ -50,11 +52,11 @@
                 
                 
                 <div class="form-group row">
-                    <label class="control-label col-md-3">Date of Birth</label>
+                    <label class="control-label col-md-3" >Date of Birth</label>
                     <div class="col-md-8">
-                      <input class="form-control" type="date"  name="dob" >
+                     <input class="form-control" type="date"  name="dob" id="dob" onchange="return checkDate();">
                       <span id="b" class="badge badge-danger"></span>
-                    </div>
+                    </div> 
                   </div>
 
                   <div class="form-group row">
@@ -103,7 +105,7 @@
                 <div class="form-group row">
                     <label class="control-label col-md-3">Photograph</label>
                     <div class="col-md-8">
-                      <input class="form-control btn btn-outline-success" type="file" name="photo">
+                      <input class="form-control btn btn-outline-success" type="file" name="photo" accept="image/*">
                       <span id="ph" class="badge badge-danger"></span>
                     </div>
                   </div>
@@ -179,9 +181,9 @@
                     <label class="control-label col-md-3" for="course">Course Applied</label>
                     <div class="col-md-8">
                     <select name="course" class="form-control" name="select">
-                      <option value="select">select</option>
+                      
                      {% for c in course %}      
-                  <option value="{{ c.id }}">{{ c.name }}</option>
+                  <option value="{{ c.id }}">{{ c.course_name }}</option>
                      {% endfor %}
                 </select>
                 <span id="sel" class="badge badge-danger"></span>
@@ -269,6 +271,22 @@
       }
     </script>
     <script>
+
+      function checkDate() {
+        var selectedText = document.getElementById('dob').value;
+        var selectedDate = new Date(selectedText);
+        var now = new Date();
+        if (selectedDate > now) {
+          document.getElementById("b").style.display="inline";
+          document.getElementById("b").innerHTML="Please enter valid date of birth";
+         document.myform.dob.focus();
+         return false;
+        }
+        else{
+          document.getElementById("b").style.display="none";
+        }
+      }
+    
         function validate()  
             {  
                  if (document.myform.name.value.trim()=="")

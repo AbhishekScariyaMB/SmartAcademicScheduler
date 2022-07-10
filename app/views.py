@@ -14,7 +14,7 @@ from openpyxl import Workbook
 from matplotlib import pyplot as plt
 #------------------------------
 import random as rnd
-POPULATION_SIZE = 9
+POPULATION_SIZE = 6
 NUMB_OF_ELITE_SCHEDULES = 1
 TOURNAMENT_SELECTION_SIZE = 3
 MUTATION_RATE = 0.05
@@ -270,27 +270,27 @@ def timetable(request):
     for classs in schedule:
         mysheet=wb[classs.batch]
         if(classs.meeting_time.pid) in range(1,7):
-            mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=classs.subject.subject_number
+            mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
         elif(classs.meeting_time.pid) in range(7,13): 
             if(classs.meeting_time.pid%6==0):
-                mysheet.cell(row=3,column=7).value=classs.subject.subject_number       
+                mysheet.cell(row=3,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)    
             else:
-                mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+                mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
         elif(classs.meeting_time.pid) in range(13,19):    
              if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=4,column=7).value=classs.subject.subject_number
+                 mysheet.cell(row=4,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
              else:
-                 mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+                 mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
         elif(classs.meeting_time.pid) in range(19,25):    
             if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=5,column=7).value=classs.subject.subject_number
+                 mysheet.cell(row=5,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
             else:
-                 mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number
+                 mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
         elif(classs.meeting_time.pid) in range(25,31):    
             if(classs.meeting_time.pid%6==0):
-                 mysheet.cell(row=6,column=7).value=classs.subject.subject_number
+                 mysheet.cell(row=6,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)
             else:
-                 mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=classs.subject.subject_number    
+                 mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)+","+str(classs.room.r_number)   
     f=wb["Sheet"]
     wb.remove(f)
     wb.save('D:\Main Project\cms\\timetable\\timetable.xlsx')        
@@ -354,7 +354,7 @@ def user_login(request):
                         return redirect('/dash/')
                     elif e.name=='teacher':
                         dat3=teacher.objects.get(login_id=d.id)
-                        if dat3.name=='null':
+                        if dat3.name=='no data':
                             return render(request, 'teacherregister.html')
                         else:    
                             return redirect('/dash2/')  
@@ -670,10 +670,10 @@ def teachergen(request):
         if d.username == email:
             messages.warning(request, 'User already exists...!')
             return redirect('/useradd/')
-    l=login.objects.create(username=email,password=password,utype_id=2,status='1',uid=uid)
+    l=login.objects.create(username=email,password=password,utype_id=2,status='1')
     l.save()
     login_id=l.id
-    t=teacher.objects.create(name='null',dob='2017-06-15',gender='null',address='null',email=email,dept_id=dept_id,qualification='null',login_id=login_id)
+    t=teacher.objects.create(name='no data',phone='no data',dob=None,gender='no data',address='no data',email=email,dept_id=dept_id,qualification='no data',login_id=login_id,uid=uid)
     t.save()
     subject = 'Login credentials'
     message = f'Welcome to Smart Academic Scheduler. Here are your login credentials.\nUsername: {email}\nPassword: {password}'
@@ -906,7 +906,7 @@ def confirmapp(request):
     a=application.objects.get(id=id)
     c=course.objects.get(id=a.course_id)
     subject = 'Application confirmation'
-    message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.name}\n\n\n Please contact us to confirm your application. You can do so by replying to this email or contacting us at +919228833746.'
+    message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.course_name}\n\n\n Please contact us to confirm your application. You can do so by replying to this email or contacting us at +919228833746.'
     email_from = cms.settings.EMAIL_HOST_USER
     recipient_list = [a.email]
     send_mail( subject, message, email_from, recipient_list )
@@ -917,7 +917,7 @@ def confirmapp(request):
     data={
         "app":snd1,
         "rec":snd2,
-        "course":c.name,
+        "course":c.course_name,
     }
     return render(request,'appliview.html',data)
 
@@ -935,7 +935,7 @@ def confirmedapp(request):
     data={
         "app":snd1,
         "rec":snd2,
-        "course":c.name,
+        "course":c.course_name,
     }
     return render(request,'appliview.html',data)
 
@@ -972,7 +972,7 @@ def ranklist(request):
     print(b)           
     data={
         "applicants":b,
-        "course":c.name,
+        "course":c.course_name,
     }     
     return render(request,'ranklist.html',data)  
 
@@ -989,7 +989,7 @@ def sendinvite(request):
     for i in applicants:
         a=application.objects.get(id=int(i))
         subject = 'Interview invitation'
-        message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.name}\n\n\n The admission process has been scheduled on { date }. You are requested to reach the college by 9:00 am with the required documents.'
+        message = f'Welcome to EduExpert.\nApplicant name: {a.name}\nPhone: {a.phone}\nCourse: {c.course_name}\n\n\n The admission process has been scheduled on { date }. You are requested to reach the college by 9:00 am with the required documents.'
         email_from = cms.settings.EMAIL_HOST_USER
         recipient_list = [a.email]
         send_mail( subject, message, email_from, recipient_list )
@@ -1423,6 +1423,9 @@ def subjectaddteacher(request):
     return render(request,"subjectaddteacher.html",data)           
 
 def subjectaddteacherval(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
     subject_number=request.POST.get("subject_number")
     teacher_id=request.POST.getlist("teacher_id[]")
     s=subject.objects.get(subject_number=subject_number)
@@ -1430,8 +1433,72 @@ def subjectaddteacherval(request):
         c=s.teachers.add(i)
     return redirect('/batchview')
 
+def subjectteacherview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')    
+    id=request.session.get("id")
+    t = teacher.objects.get(login_id=id)
+    sub = subject.objects.filter(dept_id=t.dept_id)
+    tea = teacher.objects.filter(dept_id=t.dept_id)
+    data = {
+        "subjects":sub,
+        "teachers":tea,
+    }
+    return render(request,"subjectteacherview.html",data)
+
+def subjectteacheredit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')    
+    tid = request.POST["tid"]
+    t = teacher.objects.get(id=tid)
+    sub = subject.objects.filter(dept_id=t.dept_id)
+    data = {
+        "subjects" : sub,
+        "teacher" : t,
+    }
+    return render(request,"subjectteacheredit.html",data)
+
 def timetablegen(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
     return render(request,"timetablegen.html")
+
+def profile(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t = teacher.objects.get(login_id=id)
+    d = department.objects.get(id=t.dept_id)
+    data = {
+        "hod" : t,
+        "dept" : d,
+    }
+    return render(request,"profile.html",data)
+
+def profileupdate(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")    
+    t = teacher.objects.get(login_id=id)
+    t.name = request.POST["name"]
+    t.dob = request.POST["dob"]
+    t.gender = request.POST["gender"]
+    t.address = request.POST["address"]
+    t.email = request.POST["email"]
+    t.phone = request.POST["phone"]
+    t.qualification = request.POST["qualification"]
+    if 'photo' not in request.FILES:
+        t.save()
+    else:
+        Photo=request.FILES['photo']
+        fs=FileSystemStorage()
+        fn=fs.save(Photo.name, Photo)
+        uploaded_file_url=fs.url(fn)
+        t.photo=uploaded_file_url   
+        t.save() 
+    return redirect('/profile')

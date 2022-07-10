@@ -36,7 +36,7 @@
                 
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td>{{ c.name }}</td>
+                  <td>{{ c.course_name }}</td>
                   <td>{{ c.duration }}</td>
                   {% for d in dept %}
                   {% if c.dept_id == d.id %}

@@ -84,9 +84,13 @@ urlpatterns = [
      path('meetingedit/',views.meetingedit),
      path('meetingupdateval/',views.meetingupdateval),
      path('subjectaddteacher/',views.subjectaddteacher),
-     path('subjectaddteacherval/',views.subjectaddteacherval),  
+     path('subjectaddteacherval/',views.subjectaddteacherval),
+     path('subjectteacherview/',views.subjectteacherview),
+     path('subjectteacheredit/',views.subjectteacheredit),   
      path('timetable_generation/', views.timetable, name='timetable'),
      path('timetable/', views.timetablegen),
+     path('profile/',views.profile),
+     path('profileupdate/',views.profileupdate),
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 
