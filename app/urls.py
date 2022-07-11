@@ -98,7 +98,10 @@ urlpatterns = [
      path('studentview/',views.studentview),
      path('rejectapp/<id>',views.rejectapp),
      path('teacher_timeview/',views.teacher_timeview),
+     path('studentedit/<id>',views.studentedit,name='studentedit'),
      path('rejectapp1/<id>',views.rejectapp1),
+     path('studentupdate/',views.studentupdate),
+
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

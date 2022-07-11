@@ -4,13 +4,13 @@
 <main class="app-content">
     <div class="app-title">
       <div>
-        <h1><i class="fa fa-th-list"></i> New Admissions </h1>
+        <h1><i class="fa fa-th-list"></i> Students </h1>
         <p>For {{ cname.course_name }}</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Admissions</li>
-        <li class="breadcrumb-item active"><a href="/newadmissions/">New Admissions</a></li>
+        <li class="breadcrumb-item active"><a href="">Students</a></li>
       </ul>
     </div>
     
@@ -47,7 +47,7 @@
                   <td>{{ a.gender }}</td>
                   <td>{{ a.email }}</td>
                   <td>{{ a.phone }}</td>
-                  <td><input type="checkbox" value="{{ a.id }}" name="students[]"> </td>
+                  <td><a href="/studentedit/{{a.id}}" class="btn btn-success">Edit</a></td>
         
                              
                 </tr>

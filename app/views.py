@@ -1631,3 +1631,70 @@ def teacher_timeview(request):
     }           
     print(data)
     return render(request, 'teacher_timeview.html',data)
+def studentedit(request,id):
+    a=application.objects.get(id=id)
+    r=record.objects.get(app_id=a.id)
+    data={"a":a,"r":r}
+    return render(request, 'studentedit.html',data)
+
+def studentupdate(request):
+    id=request.POST.get('sid')
+    s=application.objects.get(id=id)
+    r=record.objects.get(app_id=id)
+    s.name=request.POST.get('name')
+    s.dob=request.POST.get('dob')
+    s.gender=request.POST.get('gender')
+    s.address=request.POST.get('address')
+    s.phone=request.POST.get('phone')
+    s.email=request.POST.get('email')
+    if 'photo' in request.FILES:
+        Photo=request.FILES['photo']
+        fs=FileSystemStorage()
+        fn=fs.save(Photo.name, Photo)
+        uploaded_file_url=fs.url(fn)
+        s.photo=uploaded_file_url
+    if 'sslc' in request.FILES:
+        sslc=request.FILES['sslc']
+        fs=FileSystemStorage()
+        fn=fs.save(sslc.name, sslc)
+        uploaded_file_url=fs.url(fn)
+        r.certificatetenth=uploaded_file_url
+        msslc = request.POST.get('msslc')
+        mplustwo = request.POST.get('mplustwo')
+        mug = request.POST.get('mug')
+        r.tenth=msslc
+        r.twelfth=mplustwo
+        r.ug=mug
+        avg=(float(msslc)+float(mplustwo)+float(mug))/3
+        s.score=avg
+    if 'plustwo' in request.FILES:
+        plustwo=request.FILES['plustwo']
+        fs=FileSystemStorage()
+        fn=fs.save(plustwo.name, plustwo)
+        uploaded_file_url=fs.url(fn)
+        r.certificatetwelfth=uploaded_file_url
+        msslc = request.POST.get('msslc')
+        mplustwo = request.POST.get('mplustwo')
+        mug = request.POST.get('mug')
+        r.tenth=msslc
+        r.twelfth=mplustwo
+        r.ug=mug
+        avg=(float(msslc)+float(mplustwo)+float(mug))/3
+        s.score=avg
+    if 'ug' in request.FILES:
+        mug=request.FILES['ug']
+        fs=FileSystemStorage()
+        fn=fs.save(mug.name, mug)
+        uploaded_file_url=fs.url(fn)
+        r.certificateug=uploaded_file_url
+        msslc = request.POST.get('msslc')
+        mplustwo = request.POST.get('mplustwo')
+        mug = request.POST.get('mug')
+        r.tenth=msslc
+        r.twelfth=mplustwo
+        r.ug=mug
+        avg=(float(msslc)+float(mplustwo)+float(mug))/3
+        s.score=avg
+    s.save()
+    r.save()
+    return redirect('studentedit',id=id)
