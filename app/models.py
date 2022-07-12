@@ -215,3 +215,11 @@ class batch(models.Model):
         batch.save()
     class Meta:
         db_table = "batch"  
+
+class attendence(models.Model):
+    student_id=models.CharField(max_length=10)
+    date=models.DateField()
+    day=models.CharField(max_length=50)
+    Att_str=models.CharField(max_length=200)
+    class Meta:
+        db_table = "attendence" 
