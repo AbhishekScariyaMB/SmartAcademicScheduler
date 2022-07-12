@@ -105,6 +105,7 @@
                     {% endif %}
                   </div>
                 </div>
+                
                   <div class="row">
                     <div class="col-md-8 mb-4">
                       <label>Address</label>
@@ -120,8 +121,12 @@
                       <label>Phone number</label>
                       <input class="form-control" type="text" name="phone" value="{{ a.phone }}" required>
                     </div>
-                    <div class="clearfix"></div>
+                    <div class="col-md-8 mb-4">
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#marks"  >Update Marks</button>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 mb-4">
                     <div class="row collapse" id="marks">
                         <div class="col-md-3">
                             <label>SSLC</label>
@@ -142,6 +147,7 @@
                             <a class="text-primary " href={{ r.certificateug }} target="_blank">Certificate</a>
                         </div>
                     </div>
+                </div>
                   </div>
                   <div class="clearfix">
                     <div class="col-md-8 mb-4">

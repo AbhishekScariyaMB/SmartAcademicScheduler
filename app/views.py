@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from app.models import login , utype, department, course, teacher, application, parent, record, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
+from app.models import login , utype, department, course, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -1698,3 +1698,33 @@ def studentupdate(request):
     s.save()
     r.save()
     return redirect('studentedit',id=id)
+
+def attendenceview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    b=batch.objects.get(class_teacher=t.id)
+    s=student.objects.filter(batch_id=b.batch_id)
+    list=[]
+    for i in s:
+        a=application.objects.get(id=i.app_id)
+        list.append(a)
+    return render(request,'attendenceview.html',{"l":list})
+
+def attendancemark(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    students=request.POST.getlist('studentid[]')
+    hours=request.POST.getlist('hour[]')
+    
+    # a=attendence()
+    # a.student_id=students
+    # a.date=request.POST.get('date')
+    # a.day=request.POST.get('cday')
+    # a.Att_str=hours 
+    # a.save()
+    return redirect('/attendenceview')
+        

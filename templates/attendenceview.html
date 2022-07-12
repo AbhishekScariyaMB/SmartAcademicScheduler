@@ -1,0 +1,122 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+   
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Students </h1>
+        <p>For {{ cname.course_name }}</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Admissions</li>
+        <li class="breadcrumb-item active"><a href="">Students</a></li>
+      </ul>
+    </div>
+    <form action="/attendancemark/" method="post">
+        {% csrf_token %}
+    <div class="col-md-4">
+        <label>Date</label>
+        <input class="form-control" type="date" name="date" value='{{ t.dob|date:"Y-m-d" }}' onchange="checkdate();" id="cdate"><br>
+        <span id="demo" style="color:rgb(254, 254, 254);background-color:rgb(255, 0, 0);"></span><br>
+        <button type="button" class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#view" id="btns">Submit</button>
+      </div><br>
+      <script>
+        document.getElementById('btns').style.display='none';
+        function checkdate(){
+            var date=document.getElementById('cdate').value;
+            var cdate=new Date(date);
+            console.log(cdate);
+            var day=cdate.getDay();
+            if(day == 0 || day == 6){
+                document.getElementById('demo').innerHTML="Saturday and Sunday not allowed";
+                document.getElementById('demo').style.display="block";
+                document.getElementById('btns').style.display="none";
+                document.getElementById('cdate').value="";
+            }
+            else{
+                document.getElementById('btns').style.display="block";
+                document.getElementById('demo').style.display="none";
+                if(day == 1){document.getElementById('cday').value="Monday";}
+                if(day == 2){document.getElementById('cday').value="Tuesday";}
+                if(day == 3){document.getElementById('cday').value="Wednesday";}
+                if(day == 4){document.getElementById('cday').value="Thursday";}
+                if(day == 5){document.getElementById('cday').value="Friday";}
+            }
+        }
+      </script>
+      <div class="clearfix"></div>
+      <div class="col-md-12 collapse" id="view">
+        <div class="tile">
+          <h3 class="tile-title">Students</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+            
+                  <th>Admission No</th>
+                  <th>Name</th>
+                  <th>1hr</th>
+                  <th>2hr</th>
+                  <th>3hr</th>
+                  <th>4hr</th>                  
+                  <th>5hr</th>                  
+                  <th>6hr</th>                  
+                  <th>all</th>                  
+
+                </tr> <tr>
+                {% for a in l %}
+                  <!-- <td>{{ forloop.counter }}</td> -->
+                  <td>{{ a.id }}</td>
+                  <td>{{ a.name }}</td>
+                  <input type="hidden" value="{{a.id}}" name="studentid[]">
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-1hr" id="{{ a.id }}a">
+                <input type="hidden" value="" id="cday" name="cday"> </td></td>
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-2hr" id="{{ a.id }}b"></td></td>
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-3hr" id="{{ a.id }}c"></td></td>
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-4hr" id="{{ a.id }}d"></td></td>
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-5hr" id="{{ a.id }}e"></td></td>
+                  <td><input type="checkbox" name="hour[]" value="{{ a.id }}-6hr" id="{{ a.id }}f"></td></td>
+                  <td><input type="checkbox" value="{{ a.id }}" id="{{ a.id }}" onclick="checkall(document.getElementById('{{a.id}}').id);"></td></td>          
+                </tr>
+                {% endfor %}
+              </thead>
+              
+            </table>
+            <script>
+                function checkall(id){
+                    console.log(id);
+                    var all=document.getElementById(id);
+                    if(all.checked == true){
+                        document.getElementById(id+"a").setAttribute("checked",'true');
+                        document.getElementById(id+"b").setAttribute("checked",'true');
+                        document.getElementById(id+"c").setAttribute("checked",'true');
+                        document.getElementById(id+"d").setAttribute("checked",'true');
+                        document.getElementById(id+"e").setAttribute("checked",'true');
+                        document.getElementById(id+"f").setAttribute("checked",'true');
+                    }
+                    else{
+                        document.getElementById(id+"a").removeAttribute("checked");
+                        document.getElementById(id+"b").removeAttribute("checked");
+                        document.getElementById(id+"c").removeAttribute("checked");
+                        document.getElementById(id+"d").removeAttribute("checked");
+                        document.getElementById(id+"e").removeAttribute("checked");
+                        document.getElementById(id+"f").removeAttribute("checked");
+                    }
+                }
+            </script>
+          </div>
+          <div align="right">
+          <input type="submit" class="btn btn-success" value="save">
+        </form>
+        </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    
+  </main>
+  {% endblock %}
