@@ -297,7 +297,7 @@ def timetable(request):
                  mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)  
     f=wb["Sheet"]
     wb.remove(f)
-    wb.save('D:\Main Project\cms\\timetable\\timetable.xlsx')        
+    wb.save('timetable\\timetable.xlsx')        
 
     return render(request, 'timetable.html', {'schedule': schedule, 'batchs': batch.objects.all(),
                                               'times': MeetingTime.objects.all()})
