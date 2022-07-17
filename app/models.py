@@ -221,6 +221,13 @@ class attendence(models.Model):
     student_id=models.CharField(max_length=10)
     date=models.DateField()
     day=models.CharField(max_length=50)
-    Att_str=models.CharField(max_length=200)
+    att_str=models.CharField(max_length=200)
     class Meta:
         db_table = "attendence" 
+
+class attstring(models.Model):
+    batch_id = models.CharField(max_length=25)
+    day=models.CharField(max_length=50)
+    def_string=models.CharField(max_length=200)
+    class Meta:
+        db_table = "attstring" 

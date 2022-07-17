@@ -1719,12 +1719,7 @@ def attendancemark(request):
         return HttpResponseRedirect('/login')
     students=request.POST.getlist('studentid[]')
     hours=request.POST.getlist('hour[]')
-    
-    # a=attendence()
-    # a.student_id=students
-    # a.date=request.POST.get('date')
-    # a.day=request.POST.get('cday')
-    # a.Att_str=hours 
-    # a.save()
+    st=student.objects.get(student_id=students[0])
+    batch=st.batch_id
     return redirect('/attendenceview')
         
