@@ -334,6 +334,9 @@ def timetable(request):
             a=attstring.objects.filter(batch_id=b.batch_id)
             for i in D:
                     a=attstring.objects.get(batch_id=b.batch_id,day=i)
+                    a.def_string=""
+                    a.save()
+                    a=attstring.objects.get(batch_id=b.batch_id,day=i)
                     temp=[]
                     if i == "Monday":
                         for k in range(0,6):
@@ -349,8 +352,12 @@ def timetable(request):
                             temp.append(schedule[b.batch_id][k])
                     elif i=="Friday":
                         for k in range(24,30):
-                            temp.append(schedule[b.batch_id][k])
-                    a.def_string=temp
+                            temp.append(schedule[b.batch_id][k])       
+                    for smh in range(len(temp)):
+                        if smh==0:
+                            a.def_string+=str(temp[smh])
+                        else:
+                            a.def_string+=','+str(temp[smh])
                     a.save()
         except attstring.DoesNotExist:
             for b in batches:
@@ -373,7 +380,12 @@ def timetable(request):
                         elif i=="Friday":
                             for k in range(24,30):
                                 temp.append(schedule[b.batch_id][k])
-                        a.def_string=temp
+                        a.def_string=""        
+                        for smh in range(len(temp)):
+                            if smh==0:
+                                a.def_string+=str(temp[smh])
+                            else:
+                                a.def_string+=','+str(temp[smh])
                         a.save()    
             
 
@@ -1874,4 +1886,12 @@ def view_att(request):
         # print(att)                           
         data=a.values()
         return JsonResponse(list(data), safe=False)
+
+def testmethod(request):
+       
+    att=attstring.objects.filter(batch_id='RMCA2030')
+    for i in att:
+        temp=i.def_string.split(',')
+        print("TEMP:",temp)
+
         

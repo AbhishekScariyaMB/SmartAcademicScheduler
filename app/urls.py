@@ -106,6 +106,7 @@ urlpatterns = [
      path('attendenceview/',views.attendenceview),
      path('attendancemark/',views.attendancemark),
     path('view-att', csrf_exempt(views.view_att),name='view-att'),
+    path('testmethod/',views.testmethod),
 
  ]
 if settings.DEBUG:
