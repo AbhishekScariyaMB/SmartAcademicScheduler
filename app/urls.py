@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
 urlpatterns = [
      path('',views.home,name='home'),
      path('depts/',views.depts),
@@ -103,6 +105,8 @@ urlpatterns = [
      path('studentupdate/',views.studentupdate),
      path('attendenceview/',views.attendenceview),
      path('attendancemark/',views.attendancemark),
+    path('view-att', csrf_exempt(views.view_att),name='view-att'),
+
  ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

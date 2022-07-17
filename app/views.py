@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from app.models import login , utype, department, course, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
+from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
+from app.models import login , utype, department, course, attstring, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from openpyxl import Workbook
 import openpyxl
+import json
 from matplotlib import pyplot as plt
 #------------------------------
 import random as rnd
@@ -1717,9 +1718,82 @@ def attendancemark(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
+    id=request.session['id']
+    T=teacher.objects.get(login_id=id)
+    b=batch.objects.get(class_teacher=T.id)
+    batchid=b.batch_id
+    print(batchid)
+    day=request.POST.get('cday')
+    defstring=attstring.objects.get(batch_id=batchid,day=day)
+    temp=defstring.def_string
+    att_string=temp.split(",")
+    print(att_string)
     students=request.POST.getlist('studentid[]')
     hours=request.POST.getlist('hour[]')
-    st=student.objects.get(student_id=students[0])
-    batch=st.batch_id
+    print(students,hours)
+    date=request.POST.get('date')
+    for s in students:
+        temp=str(s)+"-"
+        temp2=""
+        for h in hours:
+            if temp in h:
+                if '1hr' in h:
+                    temp2+='1-'+str(att_string[0])+','
+                elif '2hr' in h:
+                    temp2+='2-'+str(att_string[1])+','
+                elif '3hr' in h:
+                    temp2+='3-'+str(att_string[2])+','
+                elif '4hr' in h:
+                    temp2+='4-'+str(att_string[3])+','
+                elif '5hr' in h:
+                    temp2+='5-'+str(att_string[4])+','
+                elif '6hr' in h:
+                    temp2+='6-'+str(att_string[5])+','
+        try:
+            a=attendence.objects.get(date=date,student_id=s)
+            a.att_str=temp2
+            a.save()
+        except attendence.DoesNotExist:
+            a=attendence()
+            a.att_str=temp2
+            a.student_id=s
+            a.day=day
+            a.date=date
+            a.save()
+        print(temp2)
+    
     return redirect('/attendenceview')
+
+def view_att(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    if request.method == 'POST':
+        date=json.loads(request.body).get('date')
+        id=request.session['id']
+        T=teacher.objects.get(login_id=id)
+        b=batch.objects.get(class_teacher=T.id)
+        batchid=b.batch_id
+        students=student.objects.filter(batch_id=batchid)
+        a=attendence.objects.filter(date=date)
+        att={}
+        # for s in students:
+        #     att[s.id] = []
+        #     attobj = attendence.objects.get(student_id=s.id,date=date)
+        #     temp=attobj.att_str
+        #     if '1-' in str(temp):
+        #         att[s.id].append('1')
+        #     if '2-' in str(temp):
+        #         att[s.id].append('2')
+        #     if '3-' in str(temp):
+        #         att[s.id].append('3')
+        #     if '4-' in str(temp):
+        #         att[s.id].append('4')
+        #     if '5-' in str(temp):
+        #         att[s.id].append('5')
+        #     if '6-' in str(temp):
+        #         att[s.id].append('6') 
+        # print(att)                           
+        data=a.values()
+        return JsonResponse(list(data), safe=False)
         
