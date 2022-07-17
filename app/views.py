@@ -20,7 +20,7 @@ POPULATION_SIZE = 6
 NUMB_OF_ELITE_SCHEDULES = 1
 TOURNAMENT_SELECTION_SIZE = 3
 MUTATION_RATE = 0.05
-D = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+D = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 HOURS=[1,2,3,4,5,6]
 #------------------------------
 class Data:
@@ -258,8 +258,12 @@ def timetable(request):
     wb = Workbook()
     batches=batch.objects.all()
     hoursss=MeetingTime.objects.all()
+
+    # dataa={}
+
     for b in batches:
         ws = wb.create_sheet(b.batch_id)
+        # dataa[b.batch_id]=[]
         ws['A1']="DAY"
         i=0
         for row in ws.iter_rows(min_row=2, max_col=1, max_row=6):
@@ -275,29 +279,103 @@ def timetable(request):
         mysheet=wb[classs.batch]
         if(classs.meeting_time.pid) in range(1,7):
             mysheet.cell(row=2,column=classs.meeting_time.pid+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+            # dataa[b.batch_id].append(classs.subject.subject_number)
         elif(classs.meeting_time.pid) in range(7,13): 
             if(classs.meeting_time.pid%6==0):
                 mysheet.cell(row=3,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)   
+                # dataa[b.batch_id].append(classs.subject.subject_number)
             else:
                 mysheet.cell(row=3,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                # dataa[b.batch_id].append(classs.subject.subject_number)
         elif(classs.meeting_time.pid) in range(13,19):    
              if(classs.meeting_time.pid%6==0):
                  mysheet.cell(row=4,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
              else:
                  mysheet.cell(row=4,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
         elif(classs.meeting_time.pid) in range(19,25):    
             if(classs.meeting_time.pid%6==0):
                  mysheet.cell(row=5,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
             else:
                  mysheet.cell(row=5,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
         elif(classs.meeting_time.pid) in range(25,31):    
             if(classs.meeting_time.pid%6==0):
                  mysheet.cell(row=6,column=7).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
             else:
                  mysheet.cell(row=6,column=(classs.meeting_time.pid%6)+1).value=str(classs.subject.subject_number)+","+str(classs.teacher.uid)  
+                #  dataa[b.batch_id].append(classs.subject.subject_number)
     f=wb["Sheet"]
     wb.remove(f)
-    wb.save('timetable\\timetable.xlsx')        
+    wb.save('timetable\\timetable.xlsx') 
+    
+    wb = openpyxl.load_workbook('timetable\\timetable.xlsx')     
+    batches = batch.objects.all()
+    for bat in batches:
+        schedule = {}
+        schedule.update({bat.batch_id : []})
+        mysheet=wb[bat.batch_id]
+        for i in range(2,7):
+            for j in range(2,8):
+                x = mysheet.cell(row=i, column=j)
+                schedule[bat.batch_id].append((x.value.split(','))[0])
+    # data = {
+    #     "timetable":schedule,
+    #     "batch":batches,
+    # }
+
+    
+    batches=batch.objects.all()
+    for b in batches:
+        try:
+            a=attstring.objects.filter(batch_id=b.batch_id)
+            for i in D:
+                    a=attstring.objects.get(batch_id=b.batch_id,day=i)
+                    temp=[]
+                    if i == "Monday":
+                        for k in range(0,6):
+                            temp.append(schedule[b.batch_id][k])
+                    elif i=="Tuesday":
+                        for k in range(6,12):
+                            temp.append(schedule[b.batch_id][k])
+                    elif i=="Wednesday":
+                        for k in range(12,18):
+                            temp.append(schedule[b.batch_id][k])
+                    elif i=="Thursday":
+                        for k in  range(18,24):
+                            temp.append(schedule[b.batch_id][k])
+                    elif i=="Friday":
+                        for k in range(24,30):
+                            temp.append(schedule[b.batch_id][k])
+                    a.def_string=temp
+                    a.save()
+        except attstring.DoesNotExist:
+            for b in batches:
+                for i in D:
+                        a=attstring.objects.create(batch_id=b.batch_id,day=i)
+                        temp=[]
+                    
+                        if i == "Monday":
+                            for k in range(0,6):
+                                temp.append(schedule[b.batch_id][k])
+                        elif i=="Tuesday":
+                            for k in range(6,12):
+                                temp.append(schedule[b.batch_id][k])
+                        elif i=="Wednesday":
+                            for k in range(12,18):
+                                temp.append(schedule[b.batch_id][k])
+                        elif i=="Thursday":
+                            for k in range(18,24):
+                                temp.append(schedule[b.batch_id][k])
+                        elif i=="Friday":
+                            for k in range(24,30):
+                                temp.append(schedule[b.batch_id][k])
+                        a.def_string=temp
+                        a.save()    
+            
 
     return render(request, 'timetable.html', {'schedule': schedule, 'batchs': batch.objects.all(),
                                               'times': MeetingTime.objects.all()})
@@ -1555,7 +1633,7 @@ def timetableview(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login') 
-    wb = openpyxl.load_workbook('D:\Main Project\cms\\timetable\\timetable.xlsx')     
+    wb = openpyxl.load_workbook('timetable\\timetable.xlsx')     
     batches = batch.objects.all()
     bat = request.POST.get("bid", batches[0].batch_id)
     schedule = {}
@@ -1610,7 +1688,7 @@ def teacher_timeview(request):
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login') 
     id=request.session['id']
-    wb = openpyxl.load_workbook('D:\Main Project\cms\\timetable\\timetable.xlsx') 
+    wb = openpyxl.load_workbook('timetable\\timetable.xlsx') 
     # izumi path = D:\Main Project\cms\\timetable\\timetable.xlsx
     # Adarsh path=D:\python\Smart Academic Scheduler\SmartAcademicScheduler\timetable    
     batches = batch.objects.all()
