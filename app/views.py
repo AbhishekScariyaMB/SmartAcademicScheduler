@@ -468,40 +468,6 @@ def dash(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
-    # id = request.session['id']
-    # data=login.objects.get(id=id)
-
-
-    # data=application.objects.all()
-    # admitted=0
-    # rejected=0
-    # ongoing=0
-    # for i in data:
-    #     if i.stage=='3':
-    #         admitted+=1
-    #     elif i.stage=='0':
-    #         rejected+=1
-    #     else:
-    #         ongoing+=1    
-
-
-    # y = np.array([ongoing, admitted, rejected])
-    # mylabels = ["Ongoing", "Admitted", "Rejected"]
-    # plt.legend()
-    # plt.pie(y, labels = mylabels)
-
-
-    # total=[ongoing,admitted,rejected]
-    # title = plt.title('Admissions')
-    # title.set_ha("left")
-    # plt.gca().axis("equal")
-    # pie = plt.pie(total, startangle=0)
-    # labels=["Ongoing", "Admitted", "Rejected"]
-    # plt.legend(pie[0],labels, bbox_to_anchor=(0.8,0.5), loc="center right", fontsize=10,bbox_transform=plt.gcf().transFigure)
-    # plt.subplots_adjust(left=0.0, bottom=0.1, right=0.45)    
-    # plt.savefig('D:\Main Project\cms\static\\assets\images\pieadmission.png')
-
-
     return render(request, 'dashboard.html')  
 
 def dash2(request):
