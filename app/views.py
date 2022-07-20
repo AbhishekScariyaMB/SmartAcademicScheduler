@@ -1875,7 +1875,11 @@ def view_att(request):
         return JsonResponse(list(data), safe=False)
 
 def testmethod(request):
-    print("NOW",datetime.now())
+    
+    
+    working_days = data.objects.order_by().values('date').distinct()
+
+    print(users)
     return render(request,'teacher404.html')
 
 def teacher404(request):
