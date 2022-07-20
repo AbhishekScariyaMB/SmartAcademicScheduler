@@ -1,6 +1,18 @@
 {% extends 'studentbase.html' %}
 {% load static %}
 {% block content %}
+<style type="text/css">
+  #answer {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+ }  
+ label {
+  cursor: pointer;
+  color: rgb(249, 4, 4);
+  
+}
+</style>
 <main class="app-content">
     <div class="app-title">
       <div>
@@ -28,10 +40,8 @@
                   <th>Start Time</th>
                   <th>End Time</th>
                   <th>Teacher</th>
-                  <th>Response</th>
-                  <th>Answer</th>
-                  <th>Action</th>                   
-
+                  <th colspan="3">Answer</th>
+               
                 </tr> <tr>
                 {% if not assignments %}
                 <td colspan="7" align="center">
@@ -54,11 +64,14 @@
                 {% for response in submissions %}
                 {% if response.assignment_id == a.id %} 
                 <td><a href="{{ response.answer }}">View submission</a></td>
+                <input type="hidden" value="{{ response.answer }}" id="link">
                 {% endif %}
                 {% endfor %}
                 <form method="POST" action="/assignmentsubmit/" enctype="multipart/form-data">
                     {% csrf_token %}
+                    
                 <td>
+                    <label for="answer">Upload Assignment File</label>
                     <input type="file" name="answer" id="answer" required>
                 </td>
                 <td>
