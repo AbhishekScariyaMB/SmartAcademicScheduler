@@ -123,6 +123,8 @@ urlpatterns = [
     path('assignmentsubmissions/',views.assignmentsubmissions),
     path('assignmentevaluate/',views.assignmentevaluate),
     path('assignmentresults/',views.assignmentresults),
+    path('calattendence/',views.calattendence),
+    path('calatt/',views.calatt),
 
  ]
 if settings.DEBUG:
