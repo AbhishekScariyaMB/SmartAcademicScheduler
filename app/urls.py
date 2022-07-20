@@ -60,6 +60,7 @@ urlpatterns = [
      path('dash2/',views.dash2),
      path('dash3/',views.dash3),
      path('dash4/',views.dash4),
+     path('dash5/',views.dash5),
      path('newadmissionview/',views.newadmissionview),
      path('batchadd/',views.batchadd),
      path('batchaddval/',views.batchaddval),
@@ -107,6 +108,17 @@ urlpatterns = [
      path('attendancemark/',views.attendancemark),
     path('view-att', csrf_exempt(views.view_att),name='view-att'),
     path('testmethod/',views.testmethod),
+    path('timetableviewteacher/',views.timetableviewteacher),
+    path('teacher404/',views.teacher404),
+    path('studymaterialupload/',views.studymaterialupload),
+    path('studymaterialadd/',views.studymaterialadd),
+    path('studymaterialview/',views.studymaterialview),
+    path('studymaterialdelete/',views.studymaterialdelete),
+    path('assignmentadd/',views.assignmentadd),
+    path('assignmentgen/',views.assignmentgen),
+    path('assignmentsubjects/',views.assignmentsubjects),
+    path('assignments/',views.assignments),
+    path('assignmentsubmit/',views.assignmentsubmit),
 
  ]
 if settings.DEBUG:

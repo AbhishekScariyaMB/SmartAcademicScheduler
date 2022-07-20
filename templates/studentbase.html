@@ -37,7 +37,7 @@
         <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
     
-            <li><a class="dropdown-item" href="/teacherprofile/"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fa fa-user fa-lg"></i> Profile</a></li>
             <li><a class="dropdown-item" href="/logout/"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
           </ul>
         </li>
@@ -48,31 +48,25 @@
     <aside class="app-sidebar">
       <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" height="45" width="45" src="{% static 'images/admin.png' %}" alt="User Image">
         <div>
-          <p class="app-sidebar__user-name">TEACHER</p>
+          <p class="app-sidebar__user-name">STUDENT</p>
         
         </div>
       </div>
       <ul class="app-menu">
         <li><a class="app-menu__item" href="/dashboardref/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Home</span></a></li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-graduation-cap"></i><span class="app-menu__label">&nbsp;Classroom</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-graduation-cap"></i><span class="app-menu__label">&nbsp;Assignments</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/studentview/"><i class="fa fa-user-circle"></i>&nbsp;&nbsp;Students</a></li>
-            <li><a class="treeview-item" href="/timetableviewteacher/" rel="noopener"><i class="fa fa-search"></i>&nbsp;View Timetable</a></li>
-            <li><a class="treeview-item" href="/attendenceview/"><i class="fa fa-pencil-square-o"></i>&nbsp;Attendance</a></li>
+            <li><a class="treeview-item" href="/assignmentsubjects/"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Upload Assignments</a></li>
+            <li><a class="treeview-item" href="#" rel="noopener"><i class="fa fa-search"></i>&nbsp;View Submissions</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-book"></i><span class="app-menu__label">&nbsp;&nbsp;Study Materials</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-book"></i><span class="app-menu__label">&nbsp;&nbsp;Internals</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/studymaterialupload/"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;Upload Study Materials</a></li>
-            <li><a class="treeview-item" href="/studymaterialview/"><i class="fa fa-search"></i>&nbsp;View Study Materials</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;View Internas</a></li>
+            <li><a class="treeview-item" href="#"><i class="fa fa-search"></i>&nbsp;View Attendance</a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="fa fa-star"></i><span class="app-menu__label">&nbsp;&nbsp;Assignments</span><i class="treeview-indicator fa fa-angle-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="/assignmentadd/"><i class="fa fa-plus-square"></i>&nbsp;&nbsp;Schedule Assignment</a></li>
-            <li><a class="treeview-item" href="#"><i class="fa fa-search"></i>&nbsp;View Submissions</a></li>
-          </ul>
-        </li>
+       
         <li><a class="app-menu__item" href="/logout/"><i class="fa fa-power-off"></i><span class="app-menu__label">&nbsp;&nbsp;Log out</span></a></li>
       </ul>
     </aside>

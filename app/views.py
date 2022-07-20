@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from app.models import login , utype, department, course, attstring, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
+from app.models import login , utype, department, course, assignment, submission,studymaterial, attstring, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -13,7 +13,12 @@ import numpy as np
 from openpyxl import Workbook
 import openpyxl
 import json
+from datetime import *
 from matplotlib import pyplot as plt
+import pytz
+
+utc=pytz.UTC
+
 #------------------------------
 import random as rnd
 POPULATION_SIZE = 6
@@ -456,6 +461,8 @@ def user_login(request):
                         return redirect('/dash3/')     
                     elif e.name=='admission':
                        return redirect('/dash4/')
+                    elif e.name=='student':
+                        return redirect('/dash5/')   
                     else:
                         return render(request, 'login.html')         
     if flag==0:
@@ -486,7 +493,13 @@ def dash4(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login') 
-    return render(request, 'incharge.html')           
+    return render(request, 'incharge.html') 
+
+def dash5(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login') 
+    return render(request, 'student.html') 
 
 def dashboardref(request):
     if request.session.is_empty():
@@ -501,8 +514,10 @@ def dashboardref(request):
         return render(request, 'teacher.html')    
     elif (uid == 3):
         return render(request, 'hod.html')   
-    else:
-        return render(request, 'incharge.html')      
+    elif (uid == 4):
+        return render(request, 'incharge.html')    
+    elif (uid == 5):  
+        return render(request, 'student.html')        
 
 def deptadd(request):
     if request.session.is_empty():
@@ -1634,13 +1649,16 @@ def studentview(request):
         return HttpResponseRedirect('/login')
     id=request.session.get("id")
     t=teacher.objects.get(login_id=id)
-    b=batch.objects.get(class_teacher=t.id)
-    s=student.objects.filter(batch_id=b.batch_id)
-    list=[]
-    for i in s:
-        a=application.objects.get(id=i.app_id)
-        list.append(a)
-    print(list)
+    try:
+        b=batch.objects.get(class_teacher=t.id)
+        s=student.objects.filter(batch_id=b.batch_id)
+        list=[]
+        for i in s:
+            a=application.objects.get(id=i.app_id)
+            list.append(a)
+        print(list)
+    except batch.DoesNotExist:
+        return redirect('/teacher404')    
     return render(request,'studentview.html',{'l':list})
 
 def rejectapp(request,id):
@@ -1754,20 +1772,23 @@ def studentupdate(request):
         s.score=avg
     s.save()
     r.save()
-    return redirect('studentedit',id=id)
+    return redirect('/studentview')
 
 def attendenceview(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
-    id=request.session.get("id")
-    t=teacher.objects.get(login_id=id)
-    b=batch.objects.get(class_teacher=t.id)
-    s=student.objects.filter(batch_id=b.batch_id)
-    list=[]
-    for i in s:
-        a=application.objects.get(id=i.app_id)
-        list.append(a)
+    try:
+        id=request.session.get("id")
+        t=teacher.objects.get(login_id=id)
+        b=batch.objects.get(class_teacher=t.id)
+        s=student.objects.filter(batch_id=b.batch_id)
+        list=[]
+        for i in s:
+            a=application.objects.get(id=i.app_id)
+            list.append(a)
+    except batch.DoesNotExist:  
+        return HttpResponseRedirect('/teacher404')     
     return render(request,'attendenceview.html',{"l":list})
 
 def attendancemark(request):
@@ -1854,10 +1875,200 @@ def view_att(request):
         return JsonResponse(list(data), safe=False)
 
 def testmethod(request):
-    
-    att=attstring.objects.filter(batch_id='RMCA2030')
-    for i in att:
-        temp=i.def_string.split(',')
-        print("TEMP:",temp)
+    print("NOW",datetime.now())
+    return render(request,'teacher404.html')
 
-        
+def teacher404(request):
+    
+    return render(request,'teacher404.html')
+
+def timetableviewteacher(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)    
+    wb = openpyxl.load_workbook('timetable\\timetable.xlsx')     
+    try:
+        batches = batch.objects.get(class_teacher=t.id)
+        schedule = {}
+        schedule.update({bat : []})
+        mysheet=wb[bat]
+        for i in range(2,7):
+            for j in range(1,8):
+                x = mysheet.cell(row=i, column=j)
+                schedule[bat].append(x.value)
+        data = {
+            "timetable":schedule,
+            "batch":batches,
+        }
+    except batch.DoesNotExist:  
+        return HttpResponseRedirect('/teacher404')             
+    return render(request,'timetableviewteacher.html',data)            
+
+def studymaterialupload(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id) 
+    sub=subject.objects.filter(teachers=t.id)
+    data={
+        "subjects":sub,
+        "teacher":t,
+    }
+
+    return render(request,"studymaterial.html",data)
+
+def studymaterialadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    teacher_id=t.id
+    title=request.POST.get('title')
+    subject_number=request.POST.get('subject_number')
+    
+    m=studymaterial()
+    m.teacher_id=teacher_id
+    m.title=title
+    m.subject_number=subject_number
+
+    mat=request.FILES['mate']
+    fs=FileSystemStorage()
+    fn=fs.save(mat.name, mat)
+    uploaded_file_url=fs.url(fn)
+    m.material=uploaded_file_url   
+    m.save() 
+
+    return redirect('/studymaterialupload')
+
+def studymaterialview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    teacher_id=t.id
+    m=studymaterial.objects.filter(teacher_id=teacher_id)
+    s=subject.objects.filter(teachers=teacher_id)
+    data={
+        "materials" : m,
+        "subjects" : s,
+    }
+    return render(request,'studymaterialview.html',data)
+
+def studymaterialdelete(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    mid=request.POST.get('mid')
+    m = studymaterial.objects.get(id = mid)
+    m.delete()
+    return redirect('/studymaterialview') 
+
+def assignmentadd(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    teacher_id=t.id       
+    s=subject.objects.filter(teachers=teacher_id)
+    data={
+        "subjects" : s,
+        "teacher" : t,
+    }
+    return render(request,'assignmentadd.html',data)
+
+def assignmentgen(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    teacher_id=t.id   
+    subject_number = request.POST.get('subject_number')
+    title = request.POST.get('title')
+    problem = request.POST.get('problem')
+    fromtime = request.POST.get('fromtime')
+    totime = request.POST.get('totime')
+    a = assignment.objects.create(teacher_id=teacher_id,fromtime=fromtime,totime=totime)
+    a.subject_number = subject_number
+    a.title = title
+    a.problem = problem
+    a.save()
+    return redirect('/dashboardref')
+
+def assignmentsubjects(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')        
+    id = request.session.get("id")
+    s = student.objects.get(login_id=id)    
+    batche = batch.objects.get(batch_id=s.batch_id)
+    coursee = course.objects.get(id=batche.course_id)
+    subjects = coursee.subjects.all()
+    data={
+        "subjects" : subjects,
+    }
+    return render(request,'assignmentsubjects.html',data)
+
+def assignments(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login') 
+    sub_num = request.POST.get('subject_number')
+    a = assignment.objects.filter(subject_number=sub_num,status=1)
+    sub = subject.objects.get(subject_number=sub_num)
+    t = teacher.objects.all()
+    id = request.session.get("id")
+    stud = student.objects.get(login_id=id)
+    for assgnmt in a:       
+        try:
+            s = submission.objects.filter(assignment_id=assgnmt.id,student_id=stud.id)
+        except submission.DoesNotExist:
+            pass
+    currenttime = utc.localize(datetime.now())
+    data={}
+    data['assignments']=[]
+    data['subject']=sub
+    data['teachers']=t
+    data['submissions']=s
+    for assign in a:
+        if assign.fromtime < currenttime and assign.totime > currenttime:
+            data['assignments'].append(assign)        
+        else:
+            assign.status = 0   
+            assign.save()
+
+    return render(request,'assignments.html',data)
+
+def assignmentsubmit(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    aid = request.POST.get('aid')    
+    id = request.session.get("id")
+    s = student.objects.get(login_id=id)    
+    try:         
+        sub = submission.objects.get(assignment_id=aid,student_id=s.id)
+        ans=request.FILES['answer']
+        fs=FileSystemStorage()
+        fn=fs.save(ans.name, ans)
+        uploaded_file_url=fs.url(fn)
+        sub.answer=uploaded_file_url   
+        sub.save()
+
+    except submission.DoesNotExist:   
+        sub = submission.objects.create(student_id=s.id,assignment_id=aid,marks=0)
+
+        ans=request.FILES['answer']
+        fs=FileSystemStorage()
+        fn=fs.save(ans.name, ans)
+        uploaded_file_url=fs.url(fn)
+        sub.answer=uploaded_file_url   
+        sub.save()
+
+    return redirect('/assignmentsubjects')

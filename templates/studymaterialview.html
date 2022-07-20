@@ -1,0 +1,65 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Subjects </h1>
+        <p>List of study materials</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Subjects</li>
+        <li class="breadcrumb-item active"><a href="/studymaterialview/">View study materials</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Study Materials</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Subject code</th>
+                  <th>Subject name</th>
+                  <th>File</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                {% for m in materials %}
+
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ m.subject_number }}</td>
+                  {% for s in subjects %}
+                  {% if s.subject_number == m.subject_number %}
+                  <td>{{ s.subject_name }}</td>
+                  {% endif %}
+                  {% endfor %}
+                  <td><a href="{{ m.material }}">{{ m.title }}</a></td>
+                  <td>
+                  <form method="POST" action="/studymaterialdelete/">
+                    {% csrf_token %}
+                    
+                    <input type="text" hidden value="{{ m.id }}" name="mid">  
+               
+                <input class="btn btn-outline-info" type="submit" value="Remove">
+              </form>
+                  </td>
+                  
+                 
+                </tr>
+                {% endfor %} 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

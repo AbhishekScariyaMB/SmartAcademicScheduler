@@ -125,6 +125,7 @@ class record(models.Model):
 class student(models.Model):
     app_id=models.BigIntegerField(default=0)
     batch_id=models.CharField(max_length=100,default=0)
+    login_id=models.BigIntegerField(default=0)
     class Meta:
         db_table = "student"   
 
@@ -231,3 +232,31 @@ class attstring(models.Model):
     def_string=models.CharField(max_length=200)
     class Meta:
         db_table = "attstring" 
+
+class studymaterial(models.Model):
+    subject_number = models.CharField(max_length=10)            
+    material=models.CharField(max_length=100)
+    title=models.CharField(max_length=30)
+    teacher_id = models.BigIntegerField(default=0)
+
+    class Meta:
+        db_table = "studymaterial"
+
+class assignment(models.Model):
+    subject_number = models.CharField(max_length=10)
+    title = models.CharField(max_length=30)
+    problem = models.CharField(max_length=100)
+    teacher_id = models.BigIntegerField(default=0)
+    fromtime = models.DateTimeField()
+    totime = models.DateTimeField()
+    status = models.CharField(max_length=10,default=1)
+    class Meta:
+        db_table = "assignment"
+
+class submission(models.Model):
+    assignment_id = models.BigIntegerField(default=0)
+    answer = models.CharField(max_length=100)
+    marks = models.CharField(max_length=3)    
+    student_id = models.BigIntegerField()
+    class Meta:
+        db_table = "submission"    

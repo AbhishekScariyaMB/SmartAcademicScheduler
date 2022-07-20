@@ -1,0 +1,88 @@
+{% extends 'studentbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i>Assignments</h1>
+        <p>For {{ sub.subject_name }}</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Assignments</li>
+        <li class="breadcrumb-item active"><a href="/assignmentsubjects/">View Assignments</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Assignments</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Title</th>
+                  <th>Problem</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Teacher</th>
+                  <th>Response</th>
+                  <th>Answer</th>
+                  <th>Action</th>                   
+
+                </tr> <tr>
+                {% if not assignments %}
+                <td colspan="7" align="center">
+                  <br>
+                <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
+                </td>
+                {% else %}  
+                {% for a in assignments %} 
+               
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ a.title }}</td>
+                  <td>{{ a.problem }}</td>
+                  <td>{{ a.fromtime }}</td>
+                  <td>{{ a.totime }}</td>
+                {% for t in teachers %}
+                {% if a.teacher_id == t.id %}
+                  <td>{{ t.name }}</td>  
+                {% endif %}
+                {% endfor %}
+                {% for response in submissions %}
+                {% if response.assignment_id == a.id %} 
+                <td><a href="{{ response.answer }}">View submission</a></td>
+                {% endif %}
+                {% endfor %}
+                <form method="POST" action="/assignmentsubmit/" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <td>
+                    <input type="file" name="answer" id="answer" required>
+                </td>
+                <td>
+                 
+                    
+                    <input type="text" hidden value="{{ a.id }}" name="aid">  
+                    <br><a href="{{ m.material }}">{{ m.title }}</a>
+               
+                <input class="btn btn-outline-info" type="submit" value="Submit Assignment">
+              </form>
+                </td>             
+                </tr>
+                {% endfor %}
+              
+                {% endif %}
+              </thead>
+              <tbody>
+              
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

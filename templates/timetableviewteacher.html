@@ -1,0 +1,59 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Classroom </h1>
+        <p>View timetable</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Classroom</li>
+        <li class="breadcrumb-item active"><a href="/timetableviewteacher/">View timetable</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+            
+          <h3 class="tile-title">Timetable</h3>
+          {% for key, values in timetable.items %}
+            <h3 class="tile-title">{{ key }}</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>DAY</th>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                  <th>6</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+
+
+                {% for t in values%}     
+                    
+                  <td>{{ t }}</td>  
+                  {% ifequal forloop.counter|divisibleby:"7" True %}            
+                  </tr><tr> 
+                  {% endifequal %} 
+                  
+                  
+                 
+                {% endfor %} 
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}

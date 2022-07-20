@@ -1,0 +1,60 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+
+  <div class="app-title">
+    <div>
+      <h1><i class="fa fa-th-list"></i> Subjects </h1>
+      <p>By {{ teacher.name }}</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+      <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+      <li class="breadcrumb-item">Subjects</li>
+      <li class="breadcrumb-item active"><a href="">Study materials</a></li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="tile">
+        <h3 class="tile-title">New study materials</h3>
+        <div class="tile-body">
+          <form method="POST" action="/studymaterialadd/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label" for="subject_number">Subject</label>
+                <select name="subject_number" class="form-control">
+                 {% for s in subjects %}      
+              <option value="{{ s.subject_number }}">{{ s.subject_name }}</option>
+                 {% endfor %}
+            </select>
+        </div>  
+
+        <div class="form-group">
+            <label class="control-label">Title</label>
+            <input class="form-control" type="text"  placeholder="Enter a title" name="title" id="title" required>
+          </div>
+           
+              <div class="form-group">
+                <label class="control-label">Study Material</label>
+                <input class="form-control" type="file"  placeholder="Choose a file" name="mate" id="mat" required>
+              </div>
+        <div class="tile-footer">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-3">
+             <input class="btn btn-primary" type="submit" value="Submit">&nbsp;&nbsp;&nbsp; <button class="btn btn-secondary" type="reset"><i class="fa fa-trash"></i>Clear</button>
+            </div>
+            </div>
+         </div>
+         </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+ 
+
+
+
+</main>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'student.html' %}
+{% load static%}
+{% block content %}
+    <main class="app-content">
+      <div class="app-title">
+        <div>
+          <h1><i class="fa fa-edit"></i>Assignments</h1>
+          <p>Upload Assignments</p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+          <li class="breadcrumb-item">Assignments</li>
+          <li class="breadcrumb-item"><a href="/assignmentsubjects/">Upload Assignments</a></li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="tile">
+            <h3 class="tile-title">Subjects</h3>
+            <div class="tile-body">
+                {% for s in subjects %}
+                <form action="/assignments/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="subject_number" value="{{ s.subject_number }}">
+                <button class="btn btn-primary btn-lg" type="submit">{{ s.subject_name }}</button><br><br>
+                </form>
+                {% endfor %}
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+     
+ 
+       
+      </div>
+    </main>
+    
+  {% endblock %}
