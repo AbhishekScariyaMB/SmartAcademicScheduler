@@ -72,27 +72,32 @@
               </tr>
               <tr>
                 {% for a in l %}
+                {% for i in s %}
+                {% if a.id == i.id %}
                 <!-- <td>{{ forloop.counter }}</td> -->
-                <td>{{ a.id }}</td>
+                <td>{{ i.id }}</td>
                 <td>{{ a.name }}</td>
-                <input type="hidden" value="{{a.id}}" name="studentid[]">
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-1hr" id="{{ a.id }}a">
+                
+                <input type="hidden" value="{{i.id}}" name="studentid[]">
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-1hr" id="{{ i.id }}a">
                 </td>
                 </td>
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-2hr" id="{{ a.id }}b"></td>
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-2hr" id="{{ i.id }}b"></td>
                 </td>
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-3hr" id="{{ a.id }}c"></td>
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-3hr" id="{{ i.id }}c"></td>
                 </td>
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-4hr" id="{{ a.id }}d"></td>
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-4hr" id="{{ i.id }}d"></td>
                 </td>
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-5hr" id="{{ a.id }}e"></td>
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-5hr" id="{{ i.id }}e"></td>
                 </td>
-                <td><input type="checkbox" name="hour[]" value="{{ a.id }}-6hr" id="{{ a.id }}f"></td>
+                <td><input type="checkbox" name="hour[]" value="{{ i.id }}-6hr" id="{{ i.id }}f"></td>
                 </td>
-                <td><input type="checkbox" value="{{ a.id }}" id="{{ a.id }}"
-                    onclick="checkall(document.getElementById('{{a.id}}').id);"></td>
+                <td><input type="checkbox" value="{{ i.id }}" id="{{ i.id }}"
+                    onclick="checkall(document.getElementById('{{i.id}}').id);"></td>
                 </td>
               </tr>
+              {% endif %}
+              {% endfor %}
               {% endfor %}
             </thead>
 

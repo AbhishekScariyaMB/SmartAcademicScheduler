@@ -16,6 +16,7 @@ import json
 from datetime import *
 from matplotlib import pyplot as plt
 import pytz
+from django.utils.dateparse import parse_date
 
 utc=pytz.UTC
 
@@ -1789,7 +1790,7 @@ def attendenceview(request):
             list.append(a)
     except batch.DoesNotExist:  
         return HttpResponseRedirect('/teacher404')     
-    return render(request,'attendenceview.html',{"l":list})
+    return render(request,'attendenceview.html',{"l":list,"s":s})
 
 def attendancemark(request):
     if request.session.is_empty():
@@ -2151,4 +2152,35 @@ def assignmentresults(request):
             if assgn.subject_number == sub.subject_number:
                 data["assignments"].append(assgn)
 
-    return render(request,'assignmentresults.html',data)                
+    return render(request,'assignmentresults.html',data)
+def calattendence(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    return render(request,'calattendence.html')   
+
+def calatt(request):
+    fdate=parse_date(request.POST.get('fdate'))
+    tdate=parse_date(request.POST.get('tdate'))
+    try:
+        id=request.session.get("id")
+        t=teacher.objects.get(login_id=id)
+        b=batch.objects.get(class_teacher=t.id)
+        s=student.objects.filter(batch_id=b.batch_id)
+        data=[]
+        dates=[]
+        at=attendence.objects.all()
+        for i in at:
+            for j in s:
+                print(i.date)
+                if i.student_id == j.id and (i.date >= fdate and i.date <= tdate):
+                    data.append(i)
+        for k in data:
+            dates.append(k.date)
+        dates=set(dates)    
+        dates=list(dates)
+        
+        return HttpResponse('success')
+    except batch.DoesNotExist:  
+        return HttpResponseRedirect('/teacher404')
+    pass             

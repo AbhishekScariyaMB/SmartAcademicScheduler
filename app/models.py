@@ -219,7 +219,7 @@ class batch(models.Model):
 
 
 class attendence(models.Model):
-    student_id=models.CharField(max_length=10)
+    student_id=models.BigIntegerField()
     date=models.DateField()
     day=models.CharField(max_length=50)
     att_str=models.CharField(max_length=200)
