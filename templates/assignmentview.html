@@ -1,16 +1,16 @@
-{% extends 'studentbase.html' %}
+{% extends 'teacherbase.html' %}
 {% load static %}
 {% block content %}
 <main class="app-content">
     <div class="app-title">
       <div>
         <h1><i class="fa fa-th-list"></i>Assignments</h1>
-        <p>For {{ subject.subject_name }}</p>
+        <p>By</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Assignments</li>
-        <li class="breadcrumb-item active"><a href="/assignmentsubjects/">View Assignments</a></li>
+        <li class="breadcrumb-item active"><a href="/assignmentview/">View Assignments</a></li>
       </ul>
     </div>
     
@@ -27,8 +27,8 @@
                   <th>Problem</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Teacher</th>
-                  <th colspan="3">Answer</th>
+                  <th>Subject</th>
+                  <th>Action</th>
                
                 </tr> <tr>
                 {% if not assignments %}
@@ -44,31 +44,18 @@
                   <td>{{ a.problem }}</td>
                   <td>{{ a.fromtime }}</td>
                   <td>{{ a.totime }}</td>
-                {% for t in teachers %}
-                {% if a.teacher_id == t.id %}
-                  <td>{{ t.name }}</td>  
+                {% for s in subjects %}
+                {% if a.subject_number == s.subject_number %}
+                  <td>{{ s.subject_name }}</td>  
                 {% endif %}
                 {% endfor %}
-                {% for response in submissions %}
-                {% if response.assignment_id == a.id %} 
-                <td><a href="{{ response.answer }}">View submission</a></td>
-                <input type="hidden" value="{{ response.answer }}" id="link">
-                {% endif %}
-                {% endfor %}
-                <form method="POST" action="/assignmentsubmit/" enctype="multipart/form-data">
+                <form method="POST" action="/assignmentsubmissions/" >
                     {% csrf_token %}
-                    
                 <td>
+                    <input type="hidden" value="{{ a.id }}" name="aid">  
                     
-                    <input type="file" name="answer" id="answer" required >
-                </td>
-                <td>
-                 
-                    
-                    <input type="text" hidden value="{{ a.id }}" name="aid">  
                
-               
-                <input class="btn btn-outline-info" type="submit" value="Submit Assignment">
+                <input class="btn btn-outline-info" type="submit" value="View Submissions">
               </form>
                 </td>             
                 </tr>

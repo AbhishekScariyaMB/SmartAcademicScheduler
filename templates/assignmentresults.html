@@ -5,19 +5,19 @@
     <div class="app-title">
       <div>
         <h1><i class="fa fa-th-list"></i>Assignments</h1>
-        <p>For {{ subject.subject_name }}</p>
+        <p>For {{ student.name }}</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Assignments</li>
-        <li class="breadcrumb-item active"><a href="/assignmentsubjects/">View Assignments</a></li>
+        <li class="breadcrumb-item active"><a href="/assignmentresults/">View Assignment Results</a></li>
       </ul>
     </div>
     
       <div class="clearfix"></div>
       <div class="col-md-12">
         <div class="tile">
-          <h3 class="tile-title">Assignments</h3>
+          <h3 class="tile-title">Assignment Results</h3>
           <div class="table-responsive">
             <table class="table">
               <thead>
@@ -28,11 +28,12 @@
                   <th>Start Time</th>
                   <th>End Time</th>
                   <th>Teacher</th>
+                  <th>Marks</th>
                   <th colspan="3">Answer</th>
                
                 </tr> <tr>
                 {% if not assignments %}
-                <td colspan="7" align="center">
+                <td colspan="8" align="center">
                   <br>
                 <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
                 </td>
@@ -51,25 +52,11 @@
                 {% endfor %}
                 {% for response in submissions %}
                 {% if response.assignment_id == a.id %} 
+                <td>{{ response.marks }}</td>
                 <td><a href="{{ response.answer }}">View submission</a></td>
-                <input type="hidden" value="{{ response.answer }}" id="link">
                 {% endif %}
                 {% endfor %}
-                <form method="POST" action="/assignmentsubmit/" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                <td>
-                    
-                    <input type="file" name="answer" id="answer" required >
-                </td>
-                <td>
-                 
-                    
-                    <input type="text" hidden value="{{ a.id }}" name="aid">  
-               
-               
-                <input class="btn btn-outline-info" type="submit" value="Submit Assignment">
-              </form>
+              
                 </td>             
                 </tr>
                 {% endfor %}

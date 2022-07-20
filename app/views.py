@@ -2065,8 +2065,10 @@ def assignmentsubmit(request):
         sub.save()
 
     except submission.DoesNotExist:   
-        sub = submission.objects.create(student_id=s.id,assignment_id=aid,marks=0)
-
+        sub = submission()
+        sub.student_id=s.id
+        sub.assignment_id=aid
+        sub.marks=0
         ans=request.FILES['answer']
         fs=FileSystemStorage()
         fn=fs.save(ans.name, ans)
@@ -2075,3 +2077,78 @@ def assignmentsubmit(request):
         sub.save()
 
     return redirect('/assignmentsubjects')
+
+def assignmentview(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    tid=t.id 
+    a = assignment.objects.filter(teacher_id=tid)
+    print(a)
+    s = subject.objects.all()
+    data = {
+        "assignments":a,
+        "subjects":s,
+    }
+
+    return render(request,'assignmentview.html',data)
+
+def assignmentsubmissions(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    aid = request.POST.get('aid') 
+    a = assignment.objects.get(id=aid)
+    sub = subject.objects.get(subject_number=a.subject_number)
+    subm = submission.objects.filter(assignment_id=aid)
+    stud = student.objects.all()
+    app = application.objects.filter(stage=3)
+    data = {
+        "subject" : sub,
+        "submissions" : subm,
+        "assignment" : a,
+        "students" : stud,
+        "applications" : app,
+
+    }    
+    return render(request,'assignmentsubmissions.html',data)
+
+def assignmentevaluate(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    sid = request.POST.get('sid') 
+    marks = request.POST.get('marks') 
+    s = submission.objects.get(id = sid)
+    s.marks = marks
+    s.save()
+    return redirect('/assignmentview')
+
+def assignmentresults(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id = request.session.get("id")
+    s = student.objects.get(login_id=id)    
+    batche = batch.objects.get(batch_id=s.batch_id)
+    coursee = course.objects.get(id=batche.course_id)
+    subjects = coursee.subjects.all()
+    teachers = teacher.objects.all()
+    data={}
+    data["subjects"]=[]
+    data["teachers"]=teachers
+    data["subjects"].append(subjects)
+    data["assignments"]=[]
+    assign = assignment.objects.all()
+    subm = submission.objects.filter(student_id=s.id)
+    data["submissions"]=subm
+    app = application.objects.get(id=s.app_id)
+    data["student"]=app
+    for assgn in assign:
+        for sub in subjects:
+            if assgn.subject_number == sub.subject_number:
+                data["assignments"].append(assgn)
+
+    return render(request,'assignmentresults.html',data)                

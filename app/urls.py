@@ -119,6 +119,10 @@ urlpatterns = [
     path('assignmentsubjects/',views.assignmentsubjects),
     path('assignments/',views.assignments),
     path('assignmentsubmit/',views.assignmentsubmit),
+    path('assignmentview/',views.assignmentview),
+    path('assignmentsubmissions/',views.assignmentsubmissions),
+    path('assignmentevaluate/',views.assignmentevaluate),
+    path('assignmentresults/',views.assignmentresults),
 
  ]
 if settings.DEBUG:

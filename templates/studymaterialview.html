@@ -30,10 +30,16 @@
                 </tr>
               </thead>
               <tbody>
-              
+                <tr>
+                  {% if not materials %}
+                <td colspan="7" align="center">
+                  <br>
+                <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
+                </td>
+                {% else %}  
                 {% for m in materials %}
 
-                <tr>
+               
                   <td>{{ forloop.counter }}</td>
                   <td>{{ m.subject_number }}</td>
                   {% for s in subjects %}
@@ -54,7 +60,8 @@
                   
                  
                 </tr>
-                {% endfor %} 
+                {% endfor %}
+                {% endif %} 
               </tbody>
             </table>
           </div>

@@ -1,0 +1,82 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i>Submissions</h1>
+        <p>For {{ assignment.title }}, {{ subject.subject_name }}</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Assignments</li>
+        <li class="breadcrumb-item active"><a href="/assignmentview/">View Submissions</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Submissions</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Student name</th>
+                  <th>Admission number</th>
+                  <th>Marks</th>
+                  <th colspan="3">Answer</th>
+               
+                </tr> <tr>
+                {% if not submissions %}
+                <td colspan="7" align="center">
+                  <br>
+                <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
+                </td>
+                {% else %}  
+                {% for s in submissions %} 
+               
+                  <td>{{ forloop.counter }}</td>
+                  {% for st in students %}
+                  {% if s.student_id == st.id %}
+                  {% for app in applications %}
+                  {% if app.id == st.app_id %}
+                  <td>{{ app.name }}</td>
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                  {% endfor %}
+                  <td>{{ s.student_id }}</td>
+                  <form method="POST" action="/assignmentevaluate/">
+                    {% csrf_token %}
+                  <td><input type="text" name="marks" id="marks" required value="{{ s.marks }}" ></td>
+                  <td><a href="{{ s.answer }}">View Response</a></td>
+                
+                    
+                <td>
+                    
+                    <input type="hidden" name="sid" id="sid" required value="{{ s.id }}" >
+                </td>
+                <td>
+                                
+               
+                <input class="btn btn-outline-info" type="submit" value="Evaluate">
+              </form>
+                </td>             
+                </tr>
+                {% endfor %}
+              
+                {% endif %}
+              </thead>
+              <tbody>
+              
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endblock %}
