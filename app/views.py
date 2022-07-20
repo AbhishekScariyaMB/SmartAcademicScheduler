@@ -2025,9 +2025,11 @@ def assignments(request):
     t = teacher.objects.all()
     id = request.session.get("id")
     stud = student.objects.get(login_id=id)
+    data['submissions']=[]
     for assgnmt in a:       
         try:
             s = submission.objects.filter(assignment_id=assgnmt.id,student_id=stud.id)
+            data['submissions'].append(s)
         except submission.DoesNotExist:
             pass
     currenttime = utc.localize(datetime.now())
@@ -2035,7 +2037,7 @@ def assignments(request):
     data['assignments']=[]
     data['subject']=sub
     data['teachers']=t
-    data['submissions']=s
+    
     for assign in a:
         if assign.fromtime < currenttime and assign.totime > currenttime:
             data['assignments'].append(assign)        
