@@ -2161,7 +2161,13 @@ def calattendence(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
-    return render(request,'calattendence.html')   
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    b=batch.objects.get(class_teacher=t.id)    
+    data={
+        "batch":b.batch_id,
+    }
+    return render(request,'calattendence.html',data)   
 
 def calatt(request):
     fdate=parse_date(request.POST.get('fdate'))
@@ -2182,8 +2188,6 @@ def calatt(request):
             dates.append(k.date)
         dates=set(dates)    
         dates=list(dates)
-        # for dt in dates:
-        #     print(dt.weekday())
         c = course.objects.get(id=b.course_id)
         sub = c.subjects.all()
         hours={}
@@ -2220,8 +2224,6 @@ def calatt(request):
                         temp = b.def_string.split(',')
                         for tmp in temp:
                             hours[tmp]+=1 
-                       
-        #print(hours)
            
         for students in s:
             stud_attendance={}
@@ -2241,8 +2243,28 @@ def calatt(request):
             for x in sub:
                 temp2=temp2+str(x.subject_number)+"-"+str(round(((stud_attendance[x.subject_number]/hours[x.subject_number])*100),2))+","
             print(temp2)
-            attper = attendancepercent.objects.create(student_id=students.id,fromdate=fdate,todate=tdate,attendancevalue=temp2)      
-            attper.save()
-        return HttpResponse('success')
+            try:
+                attper = attendancepercent.objects.get(student_id=students.id,fromdate=fdate,todate=tdate) 
+                attper.attendancevalue = temp2
+                attper.save()
+            except attendancepercent.DoesNotExist:    
+                attper = attendancepercent.objects.create(student_id=students.id,fromdate=fdate,todate=tdate,attendancevalue=temp2)      
+                attper.save()
+        return redirect('/calattendence')
     except batch.DoesNotExist:  
         return HttpResponseRedirect('/teacher404')             
+
+def publishinternals(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    try:
+        b=batch.objects.get(class_teacher=t.id)
+        data = {
+            "batch":b.batch_id,
+        }
+        return render(request,'publishinternals.html',data)            
+    except batch.DoesNotExist:
+        return redirect('/teacher404')        

@@ -269,3 +269,15 @@ class attendancepercent(models.Model):
 
     class Meta:
         db_table = "attendancepercent"
+
+class internals(models.Model):
+    student_id = models.BigIntegerField()
+    subject_number = models.CharField(max_length=10)
+    assignment_one = models.CharField(max_length=10)      
+    assignment_two = models.CharField(max_length=10)    
+    series_one = models.CharField(max_length=10)  
+    series_two = models.CharField(max_length=10)  
+    attendance_mark = models.CharField(max_length=10)
+    
+    class Meta:
+        db_table = "internals"
