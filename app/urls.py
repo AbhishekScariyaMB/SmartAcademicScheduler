@@ -125,6 +125,7 @@ urlpatterns = [
     path('assignmentresults/',views.assignmentresults),
     path('calattendence/',views.calattendence),
     path('calatt/',views.calatt),
+    path('publishinternals/',views.publishinternals),
 
  ]
 if settings.DEBUG:

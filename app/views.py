@@ -2253,3 +2253,18 @@ def calatt(request):
         return redirect('/calattendence')
     except batch.DoesNotExist:  
         return HttpResponseRedirect('/teacher404')             
+
+def publishinternals(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id=request.session.get("id")
+    t=teacher.objects.get(login_id=id)
+    try:
+        b=batch.objects.get(class_teacher=t.id)
+        data = {
+            "batch":b.batch_id,
+        }
+        return render(request,'publishinternals.html',data)            
+    except batch.DoesNotExist:
+        return redirect('/teacher404')        
