@@ -2236,12 +2236,13 @@ def calatt(request):
                             if sbj.subject_number in i:
                                 stud_attendance[sbj.subject_number]+=1
                                
-            print(stud_attendance)
+            print("student",stud_attendance)
+            print("total",hours)
             for x in sub:
-                pass
-                  
-
+                temp2=temp2+str(x.subject_number)+"-"+str(round(((stud_attendance[x.subject_number]/hours[x.subject_number])*100),2))+","
+            print(temp2)
+            attper = attendancepercent.objects.create(student_id=students.id,fromdate=fdate,todate=tdate,attendancevalue=temp2)      
+            attper.save()
         return HttpResponse('success')
     except batch.DoesNotExist:  
-        return HttpResponseRedirect('/teacher404')
-    pass             
+        return HttpResponseRedirect('/teacher404')             
