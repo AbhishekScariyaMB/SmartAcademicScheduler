@@ -260,3 +260,12 @@ class submission(models.Model):
     student_id = models.BigIntegerField()
     class Meta:
         db_table = "submission"    
+
+class attendancepercent(models.Model):
+    student_id = models.BigIntegerField()
+    fromdate = models.DateField()
+    todate = models.DateField()
+    attendancevalue = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "attendancepercent"

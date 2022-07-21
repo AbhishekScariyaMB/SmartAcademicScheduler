@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from app.models import login , utype, department, course, assignment, submission,studymaterial, attstring, teacher, application, parent, record,attendence, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
+from app.models import login , utype, department, course, assignment, submission,studymaterial, attstring, teacher, application, parent, record,attendence, attendancepercent, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -2176,14 +2176,71 @@ def calatt(request):
         at=attendence.objects.all()
         for i in at:
             for j in s:
-                print(i.date)
                 if i.student_id == j.id and (i.date >= fdate and i.date <= tdate):
                     data.append(i)
         for k in data:
             dates.append(k.date)
         dates=set(dates)    
         dates=list(dates)
-        
+        # for dt in dates:
+        #     print(dt.weekday())
+        c = course.objects.get(id=b.course_id)
+        sub = c.subjects.all()
+        hours={}
+        attended={}
+        for sb in sub:
+            hours[sb.subject_number]=0
+            attended[sb.subject_number]=0
+        attstr = attstring.objects.filter(batch_id=b.batch_id)
+        for a in dates:
+            temp=[]
+            for b in attstr:
+                if(a.weekday()==0):
+                    if b.day == "Monday":
+                        temp = b.def_string.split(',')
+                        for tmp in temp:
+                            hours[tmp]+=1 
+                elif(a.weekday()==1): 
+                    if b.day == "Tuesday":
+                        temp = b.def_string.split(',')  
+                        for tmp in temp:
+                            hours[tmp]+=1  
+                elif(a.weekday()==2):
+                    if b.day == "Wednesday":
+                        temp = b.def_string.split(',') 
+                        for tmp in temp:
+                            hours[tmp]+=1   
+                elif(a.weekday()==3):  
+                    if b.day == "Thursday":
+                        temp = b.def_string.split(',')
+                        for tmp in temp:
+                            hours[tmp]+=1 
+                elif(a.weekday()==4):        
+                    if b.day == "Friday":
+                        temp = b.def_string.split(',')
+                        for tmp in temp:
+                            hours[tmp]+=1 
+                       
+        #print(hours)
+           
+        for students in s:
+            stud_attendance={}
+            temp2=""
+            for x in sub:
+                stud_attendance[x.subject_number]=0 
+            for attendancevalues in data:
+                if students.id == attendancevalues.student_id:
+                    temp = attendancevalues.att_str.split(',')
+                    for i in temp:
+                        for sbj in sub:
+                            if sbj.subject_number in i:
+                                stud_attendance[sbj.subject_number]+=1
+                               
+            print(stud_attendance)
+            for x in sub:
+                pass
+                  
+
         return HttpResponse('success')
     except batch.DoesNotExist:  
         return HttpResponseRedirect('/teacher404')
