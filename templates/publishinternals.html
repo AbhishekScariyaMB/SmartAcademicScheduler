@@ -1,0 +1,111 @@
+{% extends 'teacherbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+      <div>
+        <h1><i class="fa fa-th-list"></i> Internals </h1>
+        <p>For {{ batch }}</p>
+      </div>
+      <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Classroom</li>
+        <li class="breadcrumb-item active"><a href="">Publish Internals</a></li>
+      </ul>
+    </div>
+    
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Students</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+            
+                  <th>Admission number</th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th>Assignment-1</th>
+                  <th>Assignment-2</th>                  
+                  <th>Series-1</th>                  
+                  <th>Series-2</th>
+                  <th>Attendance marks</th>
+                  <th>Total marks</th>
+                  <th>Action</th>                  
+
+                </tr> <tr>
+                {% if not students %}
+                <td colspan="10" align="center">
+                  <br>
+                <img  src="{% static 'images/nodata.png' %}" height="300" width="300">
+                </td>
+                {% else %}  
+                {% for s in students %}
+              
+                  <td>{{ s.id }}</td>
+                {% for a in apps %}
+                {% if a.id == s.app_id %}  
+                  <td>{{ a.name }}</td>
+                {% endif %} 
+                {% endfor %} 
+                  <td>{{ subject.subject_name }}</td>            
+                
+                    <td>
+                        <form method="POST" action="/updateinternals/">
+                        {% csrf_token %}
+                        <select name="assignment_one" class="form-control">
+                {% for assign in assignments %}
+                {% for sub in submissions %}
+                {% if assign.id == sub.assignment_id and sub.student_id == s.id %} 
+             
+                
+                <option value="{{ sub.marks }}">{{ assign.title }} = {{ sub.marks }} </option>
+              
+                {% endif %}    
+            
+                {% endfor %}
+                {% endfor %}
+            </select>
+            </td>
+                    <td>
+                        <select name="assignment_two" class="form-control" >
+                {% for assign in assignments %}
+                {% for sub in submissions %}
+                {% if assign.id == sub.assignment_id and sub.student_id == s.id %} 
+             
+                
+                <option value="{{ sub.marks }}">{{ assign.title }} = {{ sub.marks }} </option>
+              
+                {% endif %}    
+            
+                {% endfor %}
+                {% endfor %}
+            </select>
+            </td>
+            <td> <input class="form-control" type="text" name="series_one" id="title" required maxlength="2"> </td>
+            <td> <input class="form-control" type="text" name="series_two" id="title" required maxlength="2"> </td>
+            <input type="hidden" value="{{ s.id }}">
+            <input type="hidden" value="{{ subject.subject_number }}">
+            <td>Att marks</td>
+            </form>
+                 </tr>
+                 
+                {% endfor %} 
+                {% endif %}
+              </thead>
+              <tbody>
+              
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    
+  </main>
+  {% endblock %}

@@ -2254,17 +2254,49 @@ def calatt(request):
     except batch.DoesNotExist:  
         return HttpResponseRedirect('/teacher404')             
 
+def internalsubjects(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    id = request.session.get("id")
+    t = teacher.objects.get(login_id=id)    
+    batche = batch.objects.get(class_teacher=t.id)
+    coursee = course.objects.get(id=batche.course_id)
+    subjects = coursee.subjects.all()
+    data={
+        "subjects":subjects,
+    }
+    return render(request,'internalsubjects.html',data)
+
 def publishinternals(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
         return HttpResponseRedirect('/login')
-    id=request.session.get("id")
-    t=teacher.objects.get(login_id=id)
+    id = request.session.get("id")
+    t = teacher.objects.get(login_id=id)
+    subject_num = request.POST.get('subject_number')
+    subj = subject.objects.get(subject_number = subject_num)
+    assign = assignment.objects.filter(subject_number=subject_num)
+    subms = submission.objects.all()
+    atttt = attendancepercent.objects.all()
+  
     try:
         b=batch.objects.get(class_teacher=t.id)
+        s=student.objects.filter(batch_id=b.batch_id)
+        lists=[]
+        for i in s:
+            a=application.objects.get(id=i.app_id)
+            lists.append(a)
         data = {
             "batch":b.batch_id,
+            "students":s,
+            "apps":lists,
+            "subject":subj,
+            "assignments":assign,
+            "submissions":subms,
+                        
         }
+        print("data",data)
         return render(request,'publishinternals.html',data)            
     except batch.DoesNotExist:
         return redirect('/teacher404')        
