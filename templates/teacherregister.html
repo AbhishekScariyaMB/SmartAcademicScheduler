@@ -33,12 +33,12 @@
           <div class="tile">
             <h3 class="tile-title">Register your details</h3>
             <div class="tile-body">
-              <form class="form-horizontal" method="POST" action='/teacherregister/' enctype="multipart/form-data">
+              <form class="form-horizontal" method="POST" action='/teacherregister/' enctype="multipart/form-data" name="f">
                 {% csrf_token %}
                 <div class="form-group row">
                   <label class="control-label col-md-3">Name</label>
                   <div class="col-md-8">
-                    <input class="form-control" type="text" placeholder="Enter full name" name="name" required>
+                    <input class="form-control" type="text" placeholder="Enter full name" name="name" onKeyDown="return alphaOnly(event)" required>
                   </div>
                 </div>
                 
@@ -82,7 +82,7 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3">Phone no</label>
                     <div class="col-md-8">
-                      <input class="form-control" type="text" placeholder="Enter phone number" name="phone" required>
+                      <input class="form-control" type="text" placeholder="Enter phone number" name="phone" onKeyDown="return numOnly(event)" onchange="return phcheck()" required>
                     </div>
                   </div>  
 
@@ -123,6 +123,39 @@
       	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       	ga('create', 'UA-72504830-1', 'auto');
       	ga('send', 'pageview');
+      }
+    </script>
+    <script>
+      function emcheck(){
+          var e=f.email.value;
+          var validemail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+          if(e.match(validemail))
+          {
+              return true;
+          }
+          alert("Invalid Email");
+          $('#e').val('');
+          return false;
+      }
+      function numOnly(event) {
+      var key = event.keyCode;
+      return ((key >= 48 && key <= 57) || key == 8);
+      }
+      function alphaOnly(event) {
+      var key = event.keyCode;
+      return ((key >= 65 && key <= 90) ||  key == 8 ||  key == 32);
+      }
+      function phcheck(){
+          var p=f.phone.value.length;
+          var ph=f.phone.value;
+          var phoneno = /^\(?([6789][0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+          if(ph.match(phoneno)){
+              return true;
+          }
+          alert("Invalid Phone Number");
+          $('#p').val('');
+          return false;
+          
       }
     </script>
   </body>
