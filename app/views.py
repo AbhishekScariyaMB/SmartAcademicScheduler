@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
-from app.models import login , utype, department, course, assignment, submission,studymaterial, attstring, teacher, application, parent, record,attendence, attendancepercent, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
+from app.models import login , utype, department, course,internals ,assignment, submission,studymaterial, attstring, teacher, application, parent, record,attendence, attendancepercent, student, batch, subject, Room, time_slots, DAYS_OF_WEEK, MeetingTime
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
@@ -2278,15 +2278,25 @@ def publishinternals(request):
     subj = subject.objects.get(subject_number = subject_num)
     assign = assignment.objects.filter(subject_number=subject_num)
     subms = submission.objects.all()
-    atttt = attendancepercent.objects.all()
+    
   
     try:
         b=batch.objects.get(class_teacher=t.id)
         s=student.objects.filter(batch_id=b.batch_id)
+        internalss=internals.objects.all()
         lists=[]
+        attmarklist={}
         for i in s:
+            attmarklist[i.id]=0
             a=application.objects.get(id=i.app_id)
             lists.append(a)
+            atttt = attendancepercent.objects.get(student_id=i.id)
+            temp = atttt.attendancevalue.split(',')
+            for tm in temp:
+                if (str(subject_num)+'-') in tm:
+                    xyz=tm.replace((str(subject_num)+'-'),'')
+                    attmarklist[i.id] = round(((float(xyz)/100)*10),2)        
+        print(attmarklist)            
         data = {
             "batch":b.batch_id,
             "students":s,
@@ -2294,9 +2304,46 @@ def publishinternals(request):
             "subject":subj,
             "assignments":assign,
             "submissions":subms,
-                        
+            "attmarks":attmarklist,
+            "internals":internalss,          
         }
-        print("data",data)
+     
         return render(request,'publishinternals.html',data)            
     except batch.DoesNotExist:
-        return redirect('/teacher404')        
+        return redirect('/teacher404')
+
+def updateinternals(request):
+    sid=request.POST.get('sid')        
+    snumber=request.POST.get('snumber')        
+    ass1=request.POST.get('assignment_one')        
+    ass2=request.POST.get('assignment_two')        
+    attmark=request.POST.get('attmark')        
+    sr1=request.POST.get('series_one')        
+    sr2=request.POST.get('series_two')
+    try:
+        i=internals.objects.get(student_id=sid)
+        i.series_one=sr1
+        i.series_two=sr2
+        i.assignment_one=ass1
+        i.assignment_two=ass2
+        i.save()
+    except internals.DoesNotExist:
+        i= internals()
+        i.student_id=sid
+        i.subject_number=snumber
+        i.attendance_mark=attmark
+        i.series_one=sr1
+        i.series_two=sr2
+        i.assignment_one=ass1
+        i.assignment_two=ass2
+        i.save()
+    return redirect('/internalsubjects')
+def view_internals(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    if request.method == 'POST':
+        date=json.loads(request.body).get('date')
+        i=internals.objects.all()
+        data=i.values()
+        return JsonResponse(list(data),safe=False)

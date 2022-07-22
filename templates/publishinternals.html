@@ -5,7 +5,7 @@
     <div class="app-title">
       <div>
         <h1><i class="fa fa-th-list"></i> Internals </h1>
-        <p>For {{ batch }}</p>
+        <p>For <span id="batch">{{ batch }}</span></p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -42,6 +42,7 @@
                 </td>
                 {% else %}  
                 {% for s in students %}
+                
               
                   <td>{{ s.id }}</td>
                 {% for a in apps %}
@@ -54,7 +55,7 @@
                     <td>
                         <form method="POST" action="/updateinternals/">
                         {% csrf_token %}
-                        <select name="assignment_one" class="form-control">
+                        <select name="assignment_one" id="{{s.id}}q" class="form-control">
                 {% for assign in assignments %}
                 {% for sub in submissions %}
                 {% if assign.id == sub.assignment_id and sub.student_id == s.id %} 
@@ -69,7 +70,7 @@
             </select>
             </td>
                     <td>
-                        <select name="assignment_two" class="form-control" >
+                        <select name="assignment_two" id="{{s.id}}" class="form-control" onchange="return calc(document.getElementById('{{s.id}}').id);">
                 {% for assign in assignments %}
                 {% for sub in submissions %}
                 {% if assign.id == sub.assignment_id and sub.student_id == s.id %} 
@@ -83,14 +84,23 @@
                 {% endfor %}
             </select>
             </td>
-            <td> <input class="form-control" type="text" name="series_one" id="title" required maxlength="2"> </td>
-            <td> <input class="form-control" type="text" name="series_two" id="title" required maxlength="2"> </td>
-            <input type="hidden" value="{{ s.id }}">
-            <input type="hidden" value="{{ subject.subject_number }}">
-            <td>Att marks</td>
+            <td> <input class="form-control" type="text" name="series_one" value="" id="{{s.id}}a" required onchange="return calc(document.getElementById('{{s.id}}').id);" maxlength="2"> </td>
+            <td> <input class="form-control" type="text" name="series_two" value="" id="{{s.id}}b" required onchange="return calc(document.getElementById('{{s.id}}').id);" maxlength="2"> </td>
+            
+            <input type="hidden" value="{{ s.id }}" name="sid">
+            <input type="hidden" value="{{ subject.subject_number}}" name="snumber">
+            {% for key,value in attmarks.items %}
+            {% if key == s.id %}
+            <td>{{ value }}</td>
+            <td id="{{s.id}}tot"></td>
+            <td>
+                <input type="hidden" value="{{value}}" name="attmark">
+                <input type="submit" class="btn btn-primary" value="update"></td>
+            {% endif %}
+            {% endfor %} 
             </form>
                  </tr>
-                 
+                
                 {% endfor %} 
                 {% endif %}
               </thead>
@@ -102,6 +112,34 @@
           </div>
         </div>
       </div>
+      <script>
+        var a=document.getElementById('batch').value;
+        console.log(a);
+        fetch("/view-internals", {
+            body: JSON.stringify({ date: a}),
+            method: "POST",
+          })
+          .then((res) => res.json())
+          .then((data) =>{
+            console.log(data);
+            data.forEach((item)=>{
+                document.getElementById(item.student_id+'a').value=item.series_one;
+                document.getElementById(item.student_id+'b').value=item.series_two;
+            });
+          });
+          function calc(id){
+            console.log(id);
+            var select2=document.getElementById(id);
+            var select1=document.getElementById(id+'q');
+            var svalue1 = select1.options[select1.selectedIndex].value;
+            var svalue2 = select2.options[select2.selectedIndex].value;
+            var value3=document.getElementById(id+'a').value;
+            var value4=document.getElementById(id+'b').value;
+            var tot=parseInt(svalue1)+parseInt(svalue2)+parseInt(value3)+parseInt(value4);
+            console.log(tot);
+            document.getElementById(id+'tot').innerHTML=tot;
+          }
+      </script>
     </div>
 
 

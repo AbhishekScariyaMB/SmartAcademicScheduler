@@ -107,6 +107,7 @@ urlpatterns = [
      path('attendenceview/',views.attendenceview),
      path('attendancemark/',views.attendancemark),
     path('view-att', csrf_exempt(views.view_att),name='view-att'),
+    path('view-internals', csrf_exempt(views.view_internals),name='view-internals'),
     path('testmethod/',views.testmethod),
     path('timetableviewteacher/',views.timetableviewteacher),
     path('teacher404/',views.teacher404),
@@ -127,6 +128,7 @@ urlpatterns = [
     path('calatt/',views.calatt),
     path('internalsubjects/',views.internalsubjects),
     path('publishinternals/',views.publishinternals),
+    path('updateinternals/',views.updateinternals),
 
  ]
 if settings.DEBUG:
