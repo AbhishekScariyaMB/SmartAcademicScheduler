@@ -1897,12 +1897,12 @@ def timetableviewteacher(request):
     try:
         batches = batch.objects.get(class_teacher=t.id)
         schedule = {}
-        schedule.update({bat : []})
-        mysheet=wb[bat]
+        schedule.update({batches : []})
+        mysheet=wb[batches.batch_id]
         for i in range(2,7):
             for j in range(1,8):
                 x = mysheet.cell(row=i, column=j)
-                schedule[bat].append(x.value)
+                schedule[batches].append(x.value)
         data = {
             "timetable":schedule,
             "batch":batches,
@@ -2338,6 +2338,7 @@ def updateinternals(request):
         i.assignment_two=ass2
         i.save()
     return redirect('/internalsubjects')
+
 def view_internals(request):
     if request.session.is_empty():
         messages.error(request,'Session has expired, please login to continue!')
@@ -2347,3 +2348,24 @@ def view_internals(request):
         i=internals.objects.all()
         data=i.values()
         return JsonResponse(list(data),safe=False)
+
+def studentviewinternals(request):
+    if request.session.is_empty():
+        messages.error(request,'Session has expired, please login to continue!')
+        return HttpResponseRedirect('/login')
+    try:
+        id = request.session.get("id")
+        s = student.objects.get(login_id=id)
+        internal = internals.objects.filter(student_id=s.id)
+        app = application.objects.get(id=s.app_id)
+        sub = subject.objects.all()
+        data = {
+            "internals" : internal,
+            "student" : s,
+            "subjects" : sub,
+            "application" : app,
+        }
+        return render(request,'studentviewinternals.html',data)
+    except internals.DoesNotExist:
+        data = {"internals":None,} 
+        return render(request,'studentviewinternals.html',data)                           

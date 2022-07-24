@@ -129,6 +129,7 @@ urlpatterns = [
     path('internalsubjects/',views.internalsubjects),
     path('publishinternals/',views.publishinternals),
     path('updateinternals/',views.updateinternals),
+    path('studentviewinternals/',views.studentviewinternals),
 
  ]
 if settings.DEBUG:

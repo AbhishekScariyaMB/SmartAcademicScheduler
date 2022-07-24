@@ -1,0 +1,81 @@
+{% extends 'studentbase.html' %}
+{% load static %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+        <div>
+            <h1><i class="fa fa-th-list"></i> Internals </h1>
+            <p>For <span id="batch">{{ app.name }}</span></p>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item">Internal Marks</li>
+            <li class="breadcrumb-item"><a href="/studentviewinternals/">View Internal Marks</a></li>
+        </ul>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+        <div class="tile">
+            <h3 class="tile-title">Internal Marks</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+
+                            <th>Admission number</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Assignment-1</th>
+                            <th>Assignment-2</th>
+                            <th>Series-1</th>
+                            <th>Series-2</th>
+                            <th>Attendance marks</th>
+                            <th>Total marks</th>
+
+                        </tr>
+                        <tr>
+                            {% if not internals %}
+                            <td colspan="10" align="center">
+                                <br>
+                                <img src="{% static 'images/nodata.png' %}" height="300" width="300">
+                            </td>
+                            {% else %}
+                            {% for i in internals %}
+
+
+                            <td>{{ student.id }}</td>
+
+                            <td>{{ application.name }}</td>
+                            {% for sub in subjects %}
+                            {% if sub.subject_number == i.subject_number %}
+                            <td>{{ sub.subject_name }}</td>
+                            <td>{{ i.assignment_one }}</td>
+                            <td>{{ i.assignment_two }}</td>
+                            <td>{{ i.series_one }}</td>
+                            <td>{{ i.series_two }}</td>
+                            <td>{{ i.attendance_mark }}</td>
+                            <td></td>
+                            {% endif %}
+                            {% endfor %}
+                            </form>
+                        </tr>
+
+                        {% endfor %}
+                        {% endif %}
+                    </thead>
+                    <tbody>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+</main>
+{% endblock %}
