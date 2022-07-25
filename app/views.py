@@ -394,9 +394,9 @@ def timetable(request):
                                 a.def_string+=','+str(temp[smh])
                         a.save()    
             
-
-    return render(request, 'timetable.html', {'schedule': schedule, 'batchs': batch.objects.all(),
-                                              'times': MeetingTime.objects.all()})
+    return redirect('/timetableview/')
+    #return render(request, 'timetable.html', {'schedule': schedule, 'batchs': batch.objects.all(),
+                                              #'times': MeetingTime.objects.all()})
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
