@@ -1230,6 +1230,10 @@ def addstudent(request):
     for s in sid:
         stud=student.objects.get(app_id=int(s))
         stud.batch_id=bid
+        app=application.objects.get(id=int(s))
+        l=login.objects.create(username=app.email,password="student",utype_id=5,status='1')
+        stud.login_id=l.id
+        l.save()
         stud.save()
     return redirect('/newadmissions/')    
 
